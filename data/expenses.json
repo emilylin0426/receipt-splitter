@@ -1,4 +1,84 @@
 {
   "people": ["Emily", "Jenny", "Ox"],
-  "records": []
+  "records": [
+    {
+      "date": "2026-08-27",
+      "store": "OS藥妝 淺草店（オーエスドラッグ 浅草店）",
+      "payer": "Jenny",
+      "currency": "JPY",
+      "items": [
+        {
+          "name": "メラノCC薬用しみ対策",
+          "price": 598,
+          "sharedBy": []
+        },
+        {
+          "name": "ソフティモ スピーディクレンジング",
+          "price": 550,
+          "sharedBy": []
+        },
+        {
+          "name": "メラノCC ディープクリア",
+          "price": 540,
+          "sharedBy": []
+        },
+        {
+          "name": "クリーンデンタル 美白ケア",
+          "price": 1200,
+          "sharedBy": []
+        },
+        {
+          "name": "ヘパソフト プラスチューブ",
+          "price": 838,
+          "sharedBy": []
+        },
+        {
+          "name": "キレートレモン クエン酸2（135円×2個）",
+          "price": 270,
+          "sharedBy": []
+        },
+        {
+          "name": "DHC 持続型ビタミン",
+          "price": 495,
+          "sharedBy": []
+        },
+        {
+          "name": "DHC コラーゲン 60日分（999円×4個）",
+          "price": 3996,
+          "sharedBy": []
+        },
+        {
+          "name": "DHC 持続型ビタミンC（547円×2個）",
+          "price": 1094,
+          "sharedBy": []
+        },
+        {
+          "name": "龍角散 のどすっきり飴",
+          "price": 255,
+          "sharedBy": []
+        },
+        {
+          "name": "イハダ 薬用フェイスプロ",
+          "price": 1400,
+          "sharedBy": []
+        },
+        {
+          "name": "キスミー 薬用ハンドクリーム",
+          "price": 380,
+          "sharedBy": []
+        },
+        {
+          "name": "足リフレッシュシート",
+          "price": 399,
+          "sharedBy": []
+        },
+        {
+          "name": "消費税（10%・8%合計）",
+          "price": 1078,
+          "sharedBy": []
+        }
+      ],
+      "id": "2026-08-27-cxr6"
+    }
+  ]
 }
