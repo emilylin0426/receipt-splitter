@@ -9,6 +9,7 @@ init();
 async function init() {
   bindTabs();
   bindAddView();
+  bindFilters();
   loadLocalRecords();
   await loadBaseData();
   populateFilters();
@@ -63,23 +64,32 @@ function renderAll() {
   renderLocalList();
 }
 
+function bindFilters() {
+  const personSel = document.getElementById('filterPerson');
+  const storeSel = document.getElementById('filterStore');
+  const dateInput = document.getElementById('filterDate');
+
+  [personSel, storeSel, dateInput].forEach(el => el.addEventListener('change', renderList));
+  document.getElementById('clearFilters').addEventListener('click', () => {
+    personSel.value = ''; storeSel.value = ''; dateInput.value = '';
+    renderList();
+  });
+}
+
+// 每次資料變動都會重建選項，所以要保留使用者當下的選擇。
 function populateFilters() {
   const people = getAllPeople();
   const stores = [...new Set(getAllRecords().map(r => r.store).filter(Boolean))];
 
-  const personSel = document.getElementById('filterPerson');
-  people.forEach(p => personSel.insertAdjacentHTML('beforeend', `<option value="${escapeAttr(p)}">${escapeHtml(p)}</option>`));
+  fillSelect(document.getElementById('filterPerson'), people, '全部人員');
+  fillSelect(document.getElementById('filterStore'), stores, '全部店家');
+}
 
-  const storeSel = document.getElementById('filterStore');
-  stores.forEach(s => storeSel.insertAdjacentHTML('beforeend', `<option value="${escapeAttr(s)}">${escapeHtml(s)}</option>`));
-
-  [personSel, storeSel, document.getElementById('filterDate')].forEach(el =>
-    el.addEventListener('change', renderList)
-  );
-  document.getElementById('clearFilters').addEventListener('click', () => {
-    personSel.value = ''; storeSel.value = ''; document.getElementById('filterDate').value = '';
-    renderList();
-  });
+function fillSelect(sel, values, allLabel) {
+  const previous = sel.value;
+  sel.innerHTML = `<option value="">${allLabel}</option>` +
+    values.map(v => `<option value="${escapeAttr(v)}">${escapeHtml(v)}</option>`).join('');
+  if (values.includes(previous)) sel.value = previous;
 }
 
 function getFilteredRecords() {
