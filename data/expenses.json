@@ -1,38 +1,4 @@
 {
-  "people": ["小明", "小華", "小美"],
-  "records": [
-    {
-      "id": "2026-08-27-001",
-      "date": "2026-08-27",
-      "store": "唐吉訶德 新宿店",
-      "payer": "小明",
-      "currency": "JPY",
-      "items": [
-        { "name": "抹茶餅乾", "price": 680, "sharedBy": ["小明", "小華"] },
-        { "name": "礦泉水 2瓶", "price": 300, "sharedBy": ["小明", "小華", "小美"] },
-        { "name": "面膜", "price": 1200, "sharedBy": ["小美"] }
-      ]
-    },
-    {
-      "id": "2026-08-28-001",
-      "date": "2026-08-28",
-      "store": "一蘭拉麵 澀谷店",
-      "payer": "小華",
-      "currency": "JPY",
-      "items": [
-        { "name": "豚骨拉麵 x3", "price": 2850, "sharedBy": ["小明", "小華", "小美"] },
-        { "name": "加點叉燒", "price": 400, "sharedBy": ["小明"] }
-      ]
-    },
-    {
-      "id": "2026-08-28-002",
-      "date": "2026-08-28",
-      "store": "JR 車票",
-      "payer": "小美",
-      "currency": "JPY",
-      "items": [
-        { "name": "澀谷到新宿 來回票", "price": 600, "sharedBy": ["小明", "小華", "小美"] }
-      ]
-    }
-  ]
+  "people": ["Emily", "Jenny", "Ox"],
+  "records": []
 }
