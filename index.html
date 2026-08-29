@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>日本旅費記帳分帳</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="app-shell">
+
+  <header class="masthead">
+    <h1>收據記帳 / 分帳</h1>
+    <span class="subtitle" id="recordCount">載入中...</span>
+  </header>
+
+  <nav class="tabs">
+    <button class="tab-btn active" data-view="list">查詢</button>
+    <button class="tab-btn" data-view="add">新增紀錄</button>
+    <button class="tab-btn" data-view="settle">分帳結算</button>
+  </nav>
+
+  <!-- ===== 查詢 / 列表 ===== -->
+  <section class="view active" id="view-list">
+    <div class="filters">
+      <select id="filterPerson"><option value="">全部人員</option></select>
+      <select id="filterStore"><option value="">全部店家</option></select>
+      <input type="date" id="filterDate">
+      <button class="secondary" id="clearFilters">清除篩選</button>
+    </div>
+
+    <div class="panel">
+      <h2>每人消費金額（日圓）</h2>
+      <canvas id="spendChart" height="140"></canvas>
+    </div>
+
+    <div id="recordList"></div>
+  </section>
+
+  <!-- ===== 新增紀錄 ===== -->
+  <section class="view" id="view-add">
+    <div class="panel">
+      <h2>貼上 AI 辨識產出的 JSON</h2>
+      <p class="hint">
+        把收據照片拍清楚後貼給 Claude，附上固定格式要求（見 README 的 prompt 範本），
+        再把它輸出的 JSON 片段貼在下面。這裡的預覽 / 新增只會存在你的瀏覽器（localStorage），
+        確認沒問題後，記得按「匯出完整資料檔」下載新的 <code>expenses.json</code>，
+        取代 <code>data/expenses.json</code> 並 git push，其他人才會看到這筆紀錄。
+      </p>
+      <textarea id="jsonInput" placeholder='{
+  "id": "2026-08-29-002",
+  "date": "2026-08-29",
+  "store": "全家便利商店",
+  "payer": "小明",
+  "currency": "JPY",
+  "items": [
+    { "name": "御飯糰", "price": 150, "sharedBy": ["小明", "小華"] }
+  ]
+}'></textarea>
+      <div id="addError"></div>
+      <div class="btn-row">
+        <button class="primary" id="previewBtn">預覽這筆紀錄</button>
+        <button class="secondary" id="addBtn" disabled>加入清單（本機）</button>
+      </div>
+      <div id="previewArea"></div>
+    </div>
+
+    <div class="panel">
+      <h2>本機暫存紀錄</h2>
+      <p class="hint">
+        以下是尚未寫回 <code>data/expenses.json</code> 的紀錄，只存在這個瀏覽器裡。
+      </p>
+      <div id="localList"></div>
+      <div class="btn-row">
+        <button class="secondary" id="exportBtn">匯出完整資料檔（含本機紀錄）</button>
+        <button class="danger" id="clearLocalBtn">清空本機暫存紀錄</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== 分帳結算 ===== -->
+  <section class="view" id="view-settle">
+    <div class="panel">
+      <h2>每人淨額</h2>
+      <p class="hint">正數代表別人欠這個人的錢，負數代表這個人還欠別人錢。</p>
+      <ul class="balance-list" id="balanceList"></ul>
+    </div>
+
+    <div class="panel">
+      <h2>建議轉帳方式</h2>
+      <p class="hint">用最少的轉帳次數，把所有人的帳結清。</p>
+      <div id="settlementList"></div>
+    </div>
+  </section>
+
+  <footer class="note">data/expenses.json + localStorage · 純靜態，無後端</footer>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.4/chart.umd.min.js"></script>
+<script src="js/split.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>

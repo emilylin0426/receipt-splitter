@@ -1,0 +1,328 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&family=JetBrains+Mono:wght@400;500;700&display=swap');
+
+:root {
+  --paper: #f6f3ec;
+  --paper-dim: #ece7da;
+  --ink: #20263a;
+  --ink-soft: #565c6e;
+  --ink-faint: #8b8f9c;
+  --stamp: #b4392b;
+  --stamp-soft: #e9d4cf;
+  --line: #d8d2c2;
+  --ok: #3c6b4f;
+  --radius: 10px;
+  --mono: 'JetBrains Mono', 'Courier New', monospace;
+  --sans: 'Noto Sans TC', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: var(--sans);
+  background: var(--paper-dim);
+  color: var(--ink);
+  min-height: 100vh;
+}
+
+/* subtle vertical perforation texture behind everything, like receipt paper */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background-image: repeating-linear-gradient(
+    to bottom,
+    transparent 0 22px,
+    rgba(32, 38, 58, 0.035) 22px 23px
+  );
+  z-index: 0;
+}
+
+.app-shell {
+  position: relative;
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 32px 20px 80px;
+  z-index: 1;
+}
+
+header.masthead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 24px;
+  border-bottom: 2px solid var(--ink);
+  padding-bottom: 12px;
+}
+
+header.masthead h1 {
+  font-size: 22px;
+  font-weight: 700;
+  margin: 0;
+  letter-spacing: 0.02em;
+}
+
+header.masthead .subtitle {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--ink-faint);
+}
+
+nav.tabs {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 24px;
+  background: var(--paper);
+  border-radius: var(--radius);
+  padding: 4px;
+  border: 1px solid var(--line);
+}
+
+nav.tabs button {
+  flex: 1;
+  padding: 10px 12px;
+  border: none;
+  background: transparent;
+  font-family: var(--sans);
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--ink-soft);
+  border-radius: 7px;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+
+nav.tabs button.active {
+  background: var(--ink);
+  color: var(--paper);
+}
+
+section.view { display: none; }
+section.view.active { display: block; }
+
+/* --- filters --- */
+.filters {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.filters select, .filters input[type="date"] {
+  font-family: var(--sans);
+  font-size: 13px;
+  padding: 8px 10px;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  background: var(--paper);
+  color: var(--ink);
+}
+
+/* --- receipt card (signature element) --- */
+.receipt-card {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  margin-bottom: 22px;
+  padding: 16px 18px 22px;
+  position: relative;
+  box-shadow: 0 1px 0 rgba(32,38,58,0.03);
+}
+
+.receipt-card::after {
+  content: "";
+  position: absolute;
+  left: 0; right: 0; bottom: -8px;
+  height: 8px;
+  background-image: linear-gradient(135deg, var(--paper-dim) 50%, transparent 50%),
+                     linear-gradient(45deg, var(--paper-dim) 50%, transparent 50%);
+  background-size: 12px 8px;
+  background-repeat: repeat-x;
+  background-position: bottom left;
+}
+
+.receipt-card .row-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 6px;
+}
+
+.receipt-card .store {
+  font-weight: 700;
+  font-size: 15px;
+}
+
+.receipt-card .date {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--ink-faint);
+}
+
+.receipt-card .payer-line {
+  font-size: 12.5px;
+  color: var(--ink-soft);
+  margin-bottom: 10px;
+}
+
+.receipt-card .payer-line b { color: var(--ink); }
+
+.receipt-card .items {
+  border-top: 1px dashed var(--line);
+  padding-top: 8px;
+  display: none;
+}
+
+.receipt-card.expanded .items { display: block; }
+
+.item-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  padding: 3px 0;
+}
+
+.item-row .item-name { color: var(--ink); }
+.item-row .item-shared { color: var(--ink-faint); font-size: 11.5px; }
+.item-row .item-price { font-family: var(--mono); }
+
+.receipt-card .total-row {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+  padding-top: 8px;
+  border-top: 1px solid var(--ink);
+  font-weight: 700;
+  font-family: var(--mono);
+}
+
+.receipt-card .toggle-hint {
+  font-size: 11px;
+  color: var(--ink-faint);
+  cursor: pointer;
+  margin-top: 4px;
+}
+
+/* --- add record view --- */
+.panel {
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.panel h2 {
+  font-size: 15px;
+  margin: 0 0 6px;
+}
+
+.panel p.hint {
+  font-size: 12.5px;
+  color: var(--ink-soft);
+  margin: 0 0 14px;
+  line-height: 1.6;
+}
+
+textarea#jsonInput {
+  width: 100%;
+  min-height: 160px;
+  font-family: var(--mono);
+  font-size: 12.5px;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  background: #fffdf8;
+  color: var(--ink);
+  resize: vertical;
+}
+
+.btn-row { display: flex; gap: 10px; margin-top: 12px; flex-wrap: wrap; }
+
+button.primary, button.secondary {
+  font-family: var(--sans);
+  font-size: 13.5px;
+  font-weight: 500;
+  padding: 10px 16px;
+  border-radius: 7px;
+  cursor: pointer;
+  border: 1px solid transparent;
+}
+
+button.primary { background: var(--ink); color: var(--paper); }
+button.primary:hover { background: #333c56; }
+
+button.secondary { background: transparent; color: var(--ink); border-color: var(--line); }
+button.secondary:hover { border-color: var(--ink); }
+
+button.danger { background: transparent; color: var(--stamp); border: 1px solid var(--stamp-soft); }
+
+#addError {
+  color: var(--stamp);
+  font-size: 12.5px;
+  margin-top: 8px;
+  display: none;
+}
+
+#previewArea { margin-top: 16px; }
+
+.local-badge {
+  display: inline-block;
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--stamp);
+  border: 1px solid var(--stamp-soft);
+  background: var(--stamp-soft);
+  padding: 1px 6px;
+  border-radius: 4px;
+  margin-left: 8px;
+  vertical-align: middle;
+}
+
+/* --- settlement view --- */
+.balance-list { list-style: none; padding: 0; margin: 0 0 20px; }
+
+.balance-list li {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--line);
+  font-size: 14px;
+}
+
+.balance-list .amt { font-family: var(--mono); font-weight: 700; }
+.amt.pos { color: var(--ok); }
+.amt.neg { color: var(--stamp); }
+
+.settlement-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  margin-bottom: 10px;
+  font-size: 14px;
+}
+
+.settlement-item .arrow { color: var(--stamp); font-weight: 700; }
+.settlement-item .amt { margin-left: auto; font-family: var(--mono); font-weight: 700; }
+
+.empty-state {
+  text-align: center;
+  color: var(--ink-faint);
+  font-size: 13px;
+  padding: 30px 0;
+}
+
+canvas#spendChart { max-width: 100%; }
+
+footer.note {
+  text-align: center;
+  font-size: 11px;
+  color: var(--ink-faint);
+  margin-top: 40px;
+  font-family: var(--mono);
+}
