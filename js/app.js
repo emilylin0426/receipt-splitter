@@ -172,7 +172,7 @@ function renderList() {
           <span class="date">${escapeHtml(r.date)}</span>
         </div>
         <div class="payer-line">由 <b>${escapeHtml(r.payer)}</b> 付款 · 共 ${(r.items || []).length} 項</div>
-        <div class="toggle-hint">點擊展開細項 ▾</div>
+        <div class="toggle-hint">點店名展開 / 收合細項 ▾</div>
         <div class="items">
           ${(r.items || []).map((it, idx) => {
             const sum = splitSummary(it);
@@ -196,11 +196,9 @@ function renderList() {
 
   container.querySelectorAll('.receipt-card').forEach(card => {
     if (expanded.has(card.dataset.id)) card.classList.add('expanded');
-    card.addEventListener('click', e => {
-      // 點品名 / 備註欄是要編輯，不要順便把卡片收合展開
-      if (e.target.closest('.item-name') || e.target.closest('.item-note')) return;
-      card.classList.toggle('expanded');
-    });
+    // 只有點店名才展開 / 收合
+    const store = card.querySelector('.store');
+    if (store) store.addEventListener('click', () => card.classList.toggle('expanded'));
   });
 }
 
@@ -328,7 +326,7 @@ function currentSplitRows(item) {
 
 function openItemEditor(recordId, index) {
   const cell = findNoteCell(recordId, index);
-  if (!cell || cell.querySelector('.item-pop')) return;
+  if (!cell || cell.classList.contains('editing')) return;
 
   const record = getAllRecords().find(r => r.id === recordId);
   const item = record && (record.items || [])[index];
@@ -338,30 +336,41 @@ function openItemEditor(recordId, index) {
   let rows = currentSplitRows(item);
   let total = Math.max(1, rows.reduce((s, r) => s + r.units, 0) || 1);
 
+  // 註解輸入框留在原位（品名右邊、價錢左邊，同一行）；分帳做成往下開的小框。
   cell.textContent = '';
-  const pop = document.createElement('div');
-  pop.className = 'item-pop';
-  pop.innerHTML = `
-    <input class="note-input" type="text" maxlength="40" placeholder="中文註解（可留白）">
-    <button type="button" class="pop-btn split-toggle">分帳</button>
-    <div class="split-box" ${rows.length ? '' : 'hidden'}>
-      <label class="split-total">總數量
-        <input class="split-total-input" type="number" min="1" step="1" value="${total}">
-      </label>
-      <div class="split-rows"></div>
-      <button type="button" class="pop-btn split-more">繼續分帳</button>
-      <div class="split-warn" hidden></div>
-    </div>
-  `;
-  cell.appendChild(pop);
+  cell.classList.add('editing');
 
-  const noteInput = pop.querySelector('.note-input');
+  const noteInput = document.createElement('input');
+  noteInput.type = 'text';
+  noteInput.className = 'note-input';
+  noteInput.maxLength = 40;
+  noteInput.placeholder = '中文註解';
   noteInput.value = item.note || '';
-  const box = pop.querySelector('.split-box');
-  const totalInput = pop.querySelector('.split-total-input');
-  const rowsWrap = pop.querySelector('.split-rows');
-  const moreBtn = pop.querySelector('.split-more');
-  const warn = pop.querySelector('.split-warn');
+
+  const splitToggle = document.createElement('button');
+  splitToggle.type = 'button';
+  splitToggle.className = 'split-toggle';
+  splitToggle.textContent = '分帳';
+
+  const box = document.createElement('div');
+  box.className = 'split-box';
+  box.hidden = rows.length === 0;
+  box.innerHTML = `
+    <label class="split-total">總數量
+      <input class="split-total-input" type="number" min="1" step="1" value="${total}">
+    </label>
+    <div class="split-rows"></div>
+    <button type="button" class="pop-btn split-more">繼續分帳</button>
+    <div class="split-warn" hidden></div>
+  `;
+
+  cell.append(noteInput, splitToggle, box);
+  if (!box.hidden) splitToggle.classList.add('on');
+
+  const totalInput = box.querySelector('.split-total-input');
+  const rowsWrap = box.querySelector('.split-rows');
+  const moreBtn = box.querySelector('.split-more');
+  const warn = box.querySelector('.split-warn');
 
   const assigned = () => rows.reduce((s, r) => s + (Number(r.units) || 0), 0);
 
@@ -402,8 +411,9 @@ function openItemEditor(recordId, index) {
   }
   renderRows();
 
-  pop.querySelector('.split-toggle').addEventListener('click', () => {
+  splitToggle.addEventListener('click', () => {
     box.hidden = !box.hidden;
+    splitToggle.classList.toggle('on', !box.hidden);
     if (!box.hidden && rows.length === 0) {
       rows.push({ who: '', units: 1 });
       renderRows();
@@ -436,15 +446,12 @@ function openItemEditor(recordId, index) {
     renderRows();
   });
 
-  // popup 內的點擊不要冒泡到卡片
-  pop.addEventListener('mousedown', e => e.stopPropagation());
-  pop.addEventListener('click', e => e.stopPropagation());
-
   let closed = false;
   function close(save) {
     if (closed) return;
     closed = true;
     document.removeEventListener('mousedown', onDocDown, true);
+    cell.classList.remove('editing');
     if (save) {
       commitItemEditor(record, index, {
         note: noteInput.value,
@@ -454,12 +461,13 @@ function openItemEditor(recordId, index) {
     }
     renderItemCell(cell, item);
   }
+  // 點到編輯區以外（含品名、店名、其他卡片）就存檔收起
   function onDocDown(e) {
-    if (!pop.contains(e.target)) close(true);
+    if (!cell.contains(e.target)) close(true);
   }
   setTimeout(() => document.addEventListener('mousedown', onDocDown, true), 0);
 
-  pop.addEventListener('keydown', e => {
+  cell.addEventListener('keydown', e => {
     if (e.key === 'Escape') { e.preventDefault(); close(false); }
   });
 

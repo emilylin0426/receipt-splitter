@@ -152,7 +152,10 @@ section.view.active { display: block; }
 .receipt-card .store {
   font-weight: 700;
   font-size: 15px;
+  cursor: pointer;
+  border-bottom: 1px dotted transparent;
 }
+.receipt-card .store:hover { border-bottom-color: var(--ink-faint); }
 
 .receipt-card .date {
   font-family: var(--mono);
@@ -214,15 +217,52 @@ section.view.active { display: block; }
 
 .item-row .item-price { flex: 0 0 auto; margin-left: auto; font-family: var(--mono); padding-top: 1px; }
 
-/* --- item popup: 中文備註 + 分帳 --- */
-.item-pop {
+/* --- inline 註解輸入（維持原本欄位位置）+ 分帳下拉 --- */
+.item-note.editing {
+  position: relative;      /* 分帳框以此為定位基準 */
+  flex-basis: 46%;         /* 編輯時給輸入框多一點空間 */
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  text-align: left;
+}
+
+.item-note .note-input {
+  flex: 1 1 auto;
+  min-width: 0;
+  font-family: var(--sans);
+  font-size: 11.5px;
+  text-align: center;
+  padding: 3px 6px;
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  background: #fffdf8;
+  color: var(--ink);
+}
+.item-note .note-input:focus { outline: none; border-color: var(--stamp); }
+
+.item-note .split-toggle {
+  flex: 0 0 auto;
+  font-family: var(--sans);
+  font-size: 10.5px;
+  white-space: nowrap;
+  padding: 3px 6px;
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  background: transparent;
+  color: var(--ink-soft);
+  cursor: pointer;
+}
+.item-note .split-toggle:hover { border-color: var(--ink); }
+.item-note .split-toggle.on { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+
+.split-box {
   position: absolute;
-  top: 100%;
-  left: 0;
+  top: calc(100% + 4px);
+  right: 0;
   z-index: 20;
-  width: 300px;
-  max-width: min(92vw, 360px);
-  margin-top: 4px;
+  width: 280px;
+  max-width: min(88vw, 320px);
   padding: 10px;
   background: #fffdf8;
   border: 1px solid var(--ink-soft);
@@ -231,19 +271,7 @@ section.view.active { display: block; }
   text-align: left;
 }
 
-.item-pop .note-input {
-  width: 100%;
-  font-family: var(--sans);
-  font-size: 12.5px;
-  padding: 5px 8px;
-  border: 1px solid var(--line);
-  border-radius: 6px;
-  background: #fff;
-  color: var(--ink);
-}
-.item-pop .note-input:focus { outline: none; border-color: var(--stamp); }
-
-.item-pop .pop-btn {
+.split-box .pop-btn {
   font-family: var(--sans);
   font-size: 12px;
   padding: 5px 12px;
@@ -253,16 +281,9 @@ section.view.active { display: block; }
   color: var(--ink);
   cursor: pointer;
 }
-.item-pop .pop-btn:hover { border-color: var(--ink); }
-.item-pop .split-toggle { margin-top: 8px; }
+.split-box .pop-btn:hover { border-color: var(--ink); }
 
-.item-pop .split-box {
-  margin-top: 10px;
-  padding-top: 10px;
-  border-top: 1px dashed var(--line);
-}
-
-.item-pop .split-total {
+.split-box .split-total {
   display: flex;
   align-items: center;
   gap: 6px;
@@ -270,7 +291,7 @@ section.view.active { display: block; }
   color: var(--ink-soft);
   margin-bottom: 8px;
 }
-.item-pop .split-total-input {
+.split-box .split-total-input {
   width: 56px;
   font-family: var(--mono);
   font-size: 12.5px;
@@ -280,13 +301,13 @@ section.view.active { display: block; }
   background: #fff;
 }
 
-.item-pop .split-row {
+.split-box .split-row {
   display: flex;
   align-items: center;
   gap: 6px;
   margin-bottom: 6px;
 }
-.item-pop .split-who {
+.split-box .split-who {
   flex: 1 1 auto;
   min-width: 0;
   font-family: var(--sans);
@@ -297,7 +318,7 @@ section.view.active { display: block; }
   background: #fff;
   color: var(--ink);
 }
-.item-pop .split-cnt {
+.split-box .split-cnt {
   flex: 0 0 auto;
   font-family: var(--mono);
   font-size: 12.5px;
@@ -306,7 +327,7 @@ section.view.active { display: block; }
   border-radius: 5px;
   background: #fff;
 }
-.item-pop .split-del {
+.split-box .split-del {
   flex: 0 0 auto;
   border: none;
   background: transparent;
@@ -315,9 +336,9 @@ section.view.active { display: block; }
   cursor: pointer;
   padding: 2px 4px;
 }
-.item-pop .split-del:hover { color: var(--stamp); }
+.split-box .split-del:hover { color: var(--stamp); }
 
-.item-pop .split-warn {
+.split-box .split-warn {
   font-size: 11.5px;
   color: var(--stamp);
   margin-top: 4px;
