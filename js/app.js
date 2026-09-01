@@ -1,4 +1,5 @@
 const LOCAL_KEY = 'receiptSplitter.localRecords';
+const NOTE_KEY = 'receiptSplitter.itemNotes';
 
 let baseData = { people: [], records: [] };
 let localRecords = [];
@@ -10,10 +11,20 @@ async function init() {
   bindTabs();
   bindAddView();
   bindFilters();
+  bindNoteEditing();
   loadLocalRecords();
   await loadBaseData();
+  backfillIds();
+  applyNoteOverlay();
   populateFilters();
   renderAll();
+}
+
+// 保底：每筆紀錄都要有 id，備註才有穩定的 key 可以掛。
+function backfillIds() {
+  (baseData.records || []).forEach((r, i) => {
+    if (!r.id) r.id = `${r.date || 'rec'}-${i}`;
+  });
 }
 
 async function loadBaseData() {
@@ -125,12 +136,13 @@ function renderList() {
         <div class="payer-line">由 <b>${escapeHtml(r.payer)}</b> 付款 · 共 ${(r.items || []).length} 項</div>
         <div class="toggle-hint">點擊展開細項 ▾</div>
         <div class="items">
-          ${(r.items || []).map(it => `
+          ${(r.items || []).map((it, idx) => `
             <div class="item-row">
-              <div>
-                <div class="item-name">${escapeHtml(it.name)}</div>
+              <div class="item-main">
+                <div class="item-name" data-note-trigger data-record="${escapeAttr(r.id)}" data-index="${idx}" title="點一下加中文註解">${escapeHtml(it.name)}</div>
                 <div class="item-shared">${(it.sharedBy || []).map(escapeHtml).join('、') || '全員均分'}</div>
               </div>
+              <div class="item-note" data-note-cell data-record="${escapeAttr(r.id)}" data-index="${idx}">${it.note ? escapeHtml(it.note) : ''}</div>
               <div class="item-price">¥${formatNum(it.price)}</div>
             </div>
           `).join('')}
@@ -141,7 +153,11 @@ function renderList() {
   }).join('');
 
   container.querySelectorAll('.receipt-card').forEach(card => {
-    card.addEventListener('click', () => card.classList.toggle('expanded'));
+    card.addEventListener('click', e => {
+      // 點品名或備註欄是要編輯註解，不要順便把卡片收合／展開
+      if (e.target.closest('.item-name') || e.target.closest('.item-note')) return;
+      card.classList.toggle('expanded');
+    });
   });
 }
 
@@ -167,6 +183,114 @@ function renderChart() {
       plugins: { legend: { display: false } },
       scales: { y: { beginAtZero: true } }
     }
+  });
+}
+
+/* ---------------- per-item chinese notes ---------------- */
+
+/*
+ * 備註存兩個地方：
+ *  1. 直接掛在 record.items[i].note 上，這樣「匯出完整資料檔」會一起帶出去，push 之後大家都看得到。
+ *  2. 另外在 localStorage 疊一份 overlay，讓還沒匯出就重新整理頁面時備註不會消失。
+ * 讀完 data/expenses.json 後，用 overlay 蓋一次，之後才 render。
+ */
+
+function loadNoteOverlay() {
+  try {
+    return JSON.parse(localStorage.getItem(NOTE_KEY) || '{}');
+  } catch (e) {
+    return {};
+  }
+}
+
+function saveNoteOverlay(overlay) {
+  localStorage.setItem(NOTE_KEY, JSON.stringify(overlay));
+}
+
+function applyNoteOverlay() {
+  const overlay = loadNoteOverlay();
+  getAllRecords().forEach(r => {
+    const notes = overlay[r.id];
+    if (!notes) return;
+    (r.items || []).forEach((it, i) => {
+      const n = notes[i];
+      if (n != null && n !== '') it.note = n;
+    });
+  });
+}
+
+function bindNoteEditing() {
+  const list = document.getElementById('recordList');
+  list.addEventListener('click', e => {
+    const trigger = e.target.closest('[data-note-trigger]');
+    if (!trigger) return;
+    openNoteEditor(trigger.dataset.record, Number(trigger.dataset.index));
+  });
+}
+
+function findNoteCell(recordId, index) {
+  return [...document.querySelectorAll('#recordList .item-note')]
+    .find(c => c.dataset.record === recordId && Number(c.dataset.index) === index);
+}
+
+function renderNoteCell(cell, item) {
+  cell.textContent = item && item.note ? item.note : '';
+}
+
+function setNote(record, index, rawValue) {
+  const item = (record.items || [])[index];
+  if (!item) return;
+  const value = String(rawValue).trim();
+
+  if (value) item.note = value;
+  else delete item.note;
+
+  const overlay = loadNoteOverlay();
+  const bucket = overlay[record.id] || (overlay[record.id] = {});
+  if (value) {
+    bucket[index] = value;
+  } else {
+    delete bucket[index];
+    if (Object.keys(bucket).length === 0) delete overlay[record.id];
+  }
+  saveNoteOverlay(overlay);
+
+  // 本機暫存紀錄的備註也要寫回 localRecords
+  if (localRecords.some(lr => lr.id === record.id)) saveLocalRecords();
+}
+
+function openNoteEditor(recordId, index) {
+  const cell = findNoteCell(recordId, index);
+  if (!cell || cell.querySelector('input')) return;
+
+  const record = getAllRecords().find(r => r.id === recordId);
+  const item = record && (record.items || [])[index];
+  if (!item) return;
+
+  cell.textContent = '';
+  const input = document.createElement('input');
+  input.type = 'text';
+  input.className = 'note-input';
+  input.value = item.note || '';
+  input.maxLength = 40;
+  input.placeholder = '中文註解';
+  cell.appendChild(input);
+  input.focus();
+  input.select();
+
+  let closed = false;
+  const close = (save) => {
+    if (closed) return;
+    closed = true;
+    if (save) setNote(record, index, input.value);
+    renderNoteCell(cell, item);
+  };
+
+  input.addEventListener('click', e => e.stopPropagation());
+  input.addEventListener('blur', () => close(true));
+  input.addEventListener('keydown', e => {
+    if (e.key === 'Enter') { e.preventDefault(); input.blur(); }
+    else if (e.key === 'Escape') { e.preventDefault(); close(false); }
   });
 }
 
@@ -262,10 +386,11 @@ function handlePreview() {
       <div class="items" style="display:block">
         ${parsed.items.map(it => `
           <div class="item-row">
-            <div>
+            <div class="item-main">
               <div class="item-name">${escapeHtml(it.name)}</div>
               <div class="item-shared">${(it.sharedBy || []).map(escapeHtml).join('、') || '全員均分'}</div>
             </div>
+            <div class="item-note">${it.note ? escapeHtml(it.note) : ''}</div>
             <div class="item-price">¥${formatNum(it.price)}</div>
           </div>
         `).join('')}

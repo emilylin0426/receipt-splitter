@@ -178,14 +178,48 @@ section.view.active { display: block; }
 
 .item-row {
   display: flex;
-  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
   font-size: 13px;
   padding: 3px 0;
 }
 
-.item-row .item-name { color: var(--ink); }
+.item-row .item-main { flex: 1 1 auto; min-width: 0; }
+
+.item-row .item-name {
+  color: var(--ink);
+  cursor: pointer;
+  border-bottom: 1px dotted transparent;
+}
+.item-row .item-name:hover { border-bottom-color: var(--ink-faint); }
+
 .item-row .item-shared { color: var(--ink-faint); font-size: 11.5px; }
-.item-row .item-price { font-family: var(--mono); }
+
+.item-row .item-note {
+  flex: 0 1 34%;
+  text-align: center;
+  font-size: 11.5px;
+  color: var(--stamp);
+  word-break: break-word;
+}
+
+.item-row .note-input {
+  width: 100%;
+  font-family: var(--sans);
+  font-size: 11.5px;
+  text-align: center;
+  padding: 2px 6px;
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  background: #fffdf8;
+  color: var(--ink);
+}
+.item-row .note-input:focus {
+  outline: none;
+  border-color: var(--stamp);
+}
+
+.item-row .item-price { flex: 0 0 auto; margin-left: auto; font-family: var(--mono); }
 
 .receipt-card .total-row {
   display: flex;
