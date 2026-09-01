@@ -1,6 +1,39 @@
 {
-  "people": ["Emily", "Jenny", "Ox"],
+  "people": [
+    "Emily",
+    "Jenny",
+    "Ox"
+  ],
   "records": [
+    {
+      "date": "2026-08-26",
+      "store": "FamilyMart 台東松が谷店",
+      "payer": "Emily",
+      "currency": "JPY",
+      "items": [
+        {
+          "name": "ファミチキレッド",
+          "price": 258,
+          "sharedBy": []
+        },
+        {
+          "name": "カルピス 濃いめ600",
+          "price": 183,
+          "sharedBy": []
+        },
+        {
+          "name": "日清どん兵衛 きつねうどん",
+          "price": 267,
+          "sharedBy": []
+        },
+        {
+          "name": "麦茶1L",
+          "price": 160,
+          "sharedBy": []
+        }
+      ],
+      "id": "2026-08-26-6fni"
+    },
     {
       "date": "2026-08-27",
       "store": "OS藥妝 淺草店（オーエスドラッグ 浅草店）",
@@ -10,7 +43,8 @@
         {
           "name": "メラノCC薬用しみ対策",
           "price": 598,
-          "sharedBy": []
+          "sharedBy": [],
+          "note": "維他命Ｃ洗面乳"
         },
         {
           "name": "ソフティモ スピーディクレンジング",
@@ -45,7 +79,18 @@
         {
           "name": "DHC コラーゲン 60日分（999円×4個）",
           "price": 3996,
-          "sharedBy": []
+          "sharedBy": [],
+          "note": "膠原蛋白",
+          "split": [
+            {
+              "who": "Emily",
+              "units": 2
+            },
+            {
+              "who": "Jenny",
+              "units": 2
+            }
+          ]
         },
         {
           "name": "DHC 持続型ビタミンC（547円×2個）",
@@ -79,6 +124,69 @@
         }
       ],
       "id": "2026-08-27-cxr6"
+    },
+    {
+      "date": "2026-08-29",
+      "store": "ABC-MART 上野",
+      "payer": "Jenny",
+      "currency": "JPY",
+      "items": [
+        {
+          "name": "ASICS 1011B982.002",
+          "price": 8350,
+          "sharedBy": [],
+          "note": "Lin鞋子"
+        },
+        {
+          "name": "免税額戻り",
+          "price": -759,
+          "sharedBy": []
+        }
+      ],
+      "id": "2026-08-29-pcqw"
+    },
+    {
+      "date": "2026-08-29",
+      "store": "FamilyMart 台東四丁目店",
+      "payer": "Ox",
+      "currency": "JPY",
+      "items": [
+        {
+          "name": "ラインSCホワイト 大",
+          "price": 333.3,
+          "sharedBy": []
+        },
+        {
+          "name": "ラインSCホワイト 小",
+          "price": 333.3,
+          "sharedBy": []
+        },
+        {
+          "name": "ラインSCホワイト 小",
+          "price": 333.3,
+          "sharedBy": []
+        }
+      ],
+      "id": "2026-08-29-nx79"
+    },
+    {
+      "date": "2026-08-31",
+      "store": "八十八鎌倉",
+      "payer": "Emily",
+      "currency": "JPY",
+      "items": [
+        {
+          "name": "抹茶ラテ壱",
+          "price": 800,
+          "sharedBy": []
+        },
+        {
+          "name": "抹茶ラテ壱 焙煎",
+          "price": 1000,
+          "sharedBy": []
+        }
+      ],
+      "id": "2026-08-31-y63q"
     }
   ]
 }
