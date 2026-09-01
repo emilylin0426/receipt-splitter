@@ -115,10 +115,9 @@ function fillSelect(sel, values, allLabel) {
 }
 
 function recordConsumers(record) {
-  const people = getAllPeople();
   const set = new Set();
   (record.items || []).forEach(it => {
-    Object.keys(itemShares(it, people)).forEach(who => set.add(who));
+    Object.keys(itemShares(it)).forEach(who => set.add(who));
   });
   return set;
 }
@@ -181,7 +180,9 @@ function renderList() {
             <div class="item-row">
               <div class="item-main">
                 <div class="item-name" data-note-trigger data-record="${escapeAttr(r.id)}" data-index="${idx}" title="點品名可加中文註解 / 分帳">${escapeHtml(it.name)}</div>
-                ${sum ? `<div class="split-summary">${escapeHtml(sum)}</div>` : ''}
+                ${sum
+                  ? `<div class="split-summary">${escapeHtml(sum)}</div>`
+                  : `<div class="split-summary is-public">未分帳 → 公用支出</div>`}
               </div>
               <div class="item-note" data-note-cell data-record="${escapeAttr(r.id)}" data-index="${idx}">${it.note ? escapeHtml(it.note) : ''}</div>
               <div class="item-price">¥${formatNum(it.price)}</div>
@@ -209,7 +210,7 @@ function renderChart() {
   people.forEach(p => { totals[p] = 0; });
 
   getAllRecords().forEach(r => (r.items || []).forEach(it => {
-    Object.entries(itemShares(it, people)).forEach(([who, amt]) => {
+    Object.entries(itemShares(it)).forEach(([who, amt]) => {
       if (who === PUBLIC_PAYER) return;
       totals[who] = (totals[who] || 0) + amt;
     });
@@ -530,7 +531,14 @@ function commitItemEditor(record, index, { note, rows, total }) {
   populateFilters();
 }
 
-/* ---------------- settlement：依消費者分組 ---------------- */
+/* ---------------- settlement ---------------- */
+/*
+ * 個人區塊：只列「有按下分帳」的品項，也就是這個人實際被分到的那幾筆。
+ *   - 品項有註解就只顯示註解，沒有才顯示品名
+ *   - 不是他自己付錢的用紅字，區塊底下依付款人小計「給 X ¥Y」
+ * 公用支出區塊：把每張收據「沒被分掉的金額」（＝沒分帳的品項 + 明確分給公用支出的份額）
+ *   依收據合併成一行，只顯示店家 + 金額，最後加總。
+ */
 
 function renderSettlement() {
   const people = getAllPeople();
@@ -538,20 +546,22 @@ function renderSettlement() {
 
   const byPerson = {};
   people.forEach(p => { byPerson[p] = []; });
-  const publicLines = [];
+  const publicReceipts = [];
 
   records.forEach(r => {
+    let publicAmt = 0;
     (r.items || []).forEach(it => {
-      Object.entries(itemShares(it, people)).forEach(([who, amt]) => {
+      Object.entries(itemShares(it)).forEach(([who, amt]) => {
         if (amt <= 0.5) return;
-        const line = {
-          date: r.date, store: r.store, name: it.name,
-          note: it.note || '', payer: r.payer, amt
-        };
-        if (who === PUBLIC_PAYER) publicLines.push(line);
-        else (byPerson[who] || (byPerson[who] = [])).push(line);
+        if (who === PUBLIC_PAYER) { publicAmt += amt; return; }
+        if (!itemHasSplit(it)) return; // 個人區塊只收有分帳的品項
+        (byPerson[who] || (byPerson[who] = [])).push({
+          label: it.note ? it.note : it.name,
+          date: r.date, store: r.store, payer: r.payer, amt
+        });
       });
     });
+    if (publicAmt > 0.5) publicReceipts.push({ store: r.store, date: r.date, amt: publicAmt });
   });
 
   const host = document.getElementById('settleByPerson');
@@ -565,9 +575,9 @@ function renderSettlement() {
       if (lines.length === 0) {
         return `<div class="settle-person">
           <div class="settle-person-head"><span class="sp-name">${escapeHtml(p)}</span>
-          <span class="sp-sum">沒有消費紀錄</span></div></div>`;
+          <span class="sp-sum">還沒分到任何品項</span></div></div>`;
       }
-      const consumed = lines.reduce((s, l) => s + l.amt, 0);
+      const total = lines.reduce((s, l) => s + l.amt, 0);
       const owedLines = lines.filter(l => l.payer !== p);
       const owed = owedLines.reduce((s, l) => s + l.amt, 0);
       const byPayer = {};
@@ -577,14 +587,14 @@ function renderSettlement() {
         <div class="settle-person">
           <div class="settle-person-head">
             <span class="sp-name">${escapeHtml(p)}</span>
-            <span class="sp-sum">消費 ¥${formatNum(Math.round(consumed))}
+            <span class="sp-sum">分到 ¥${formatNum(Math.round(total))}
               ${owed > 0.5 ? `<span class="sp-owe">要還 ¥${formatNum(Math.round(owed))}</span>` : ''}
             </span>
           </div>
           <div class="settle-lines">
             ${lines.map(l => `
               <div class="settle-line ${l.payer !== p ? 'owed' : ''}">
-                <span class="sl-main">${escapeHtml(l.name)}${l.note ? ` <span class="sl-note">${escapeHtml(l.note)}</span>` : ''}
+                <span class="sl-main">${escapeHtml(l.label)}
                   <span class="sl-meta">${escapeHtml(l.date)} · ${escapeHtml(l.store)}${l.payer !== p ? ` · ${escapeHtml(l.payer)} 付` : ''}</span>
                 </span>
                 <span class="sl-amt">¥${formatNum(Math.round(l.amt))}</span>
@@ -600,17 +610,17 @@ function renderSettlement() {
   }
 
   const pub = document.getElementById('settlePublic');
-  if (publicLines.length === 0) {
-    pub.innerHTML = '<div class="empty-state">沒有標成「公用支出」的品項</div>';
+  if (publicReceipts.length === 0) {
+    pub.innerHTML = '<div class="empty-state">目前沒有公用支出</div>';
   } else {
-    const t = publicLines.reduce((s, l) => s + l.amt, 0);
-    pub.innerHTML = publicLines
+    const t = publicReceipts.reduce((s, l) => s + l.amt, 0);
+    pub.innerHTML = publicReceipts
       .slice()
       .sort((a, b) => (a.date < b.date ? -1 : 1))
       .map(l => `
         <div class="settle-line">
-          <span class="sl-main">${escapeHtml(l.name)}
-            <span class="sl-meta">${escapeHtml(l.date)} · ${escapeHtml(l.store)} · ${escapeHtml(l.payer)} 付</span>
+          <span class="sl-main">${escapeHtml(l.store)}
+            <span class="sl-meta">${escapeHtml(l.date)}</span>
           </span>
           <span class="sl-amt">¥${formatNum(Math.round(l.amt))}</span>
         </div>`).join('') +
@@ -679,7 +689,9 @@ function handlePreview() {
           <div class="item-row">
             <div class="item-main">
               <div class="item-name">${escapeHtml(it.name)}</div>
-              ${sum ? `<div class="split-summary">${escapeHtml(sum)}</div>` : ''}
+              ${sum
+                ? `<div class="split-summary">${escapeHtml(sum)}</div>`
+                : `<div class="split-summary is-public">未分帳 → 公用支出</div>`}
             </div>
             <div class="item-note">${it.note ? escapeHtml(it.note) : ''}</div>
             <div class="item-price">¥${formatNum(it.price)}</div>

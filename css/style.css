@@ -199,6 +199,10 @@ section.view.active { display: block; }
   font-size: 11px;
   margin-top: 2px;
 }
+.item-row .split-summary.is-public {
+  color: var(--ink-faint);
+  font-style: italic;
+}
 
 .item-row .item-note {
   flex: 0 1 34%;
