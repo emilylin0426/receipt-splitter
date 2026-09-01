@@ -48,15 +48,18 @@
         取代 <code>data/expenses.json</code> 並 git push，其他人才會看到這筆紀錄。
       </p>
       <textarea id="jsonInput" placeholder='{
-  "id": "2026-08-29-002",
   "date": "2026-08-29",
   "store": "全家便利商店",
-  "payer": "小明",
+  "payer": "Jenny",
   "currency": "JPY",
   "items": [
-    { "name": "御飯糰", "price": 150, "sharedBy": ["小明", "小華"] }
+    { "name": "御飯糰", "price": 150 },
+    { "name": "礦泉水", "price": 110 }
   ]
-}'></textarea>
+}
+
+// 不用寫 split / sharedBy；貼進來後在「查詢」頁點品名做分帳，
+// 沒特別分的品項預設就是全員均分。'></textarea>
       <div id="addError"></div>
       <div class="btn-row">
         <button class="primary" id="previewBtn">預覽這筆紀錄</button>
@@ -81,15 +84,18 @@
   <!-- ===== 分帳結算 ===== -->
   <section class="view" id="view-settle">
     <div class="panel">
-      <h2>每人淨額</h2>
-      <p class="hint">正數代表別人欠這個人的錢，負數代表這個人還欠別人錢。</p>
-      <ul class="balance-list" id="balanceList"></ul>
+      <h2>每人消費明細</h2>
+      <p class="hint">
+        依「誰吃到 / 用到」分組。<span class="owed-legend">紅字</span>是別人幫你付、你要還的部分；
+        黑字是你自己付的。每個人下面會列出他要還給誰、各多少。
+      </p>
+      <div id="settleByPerson"></div>
     </div>
 
     <div class="panel">
-      <h2>建議轉帳方式</h2>
-      <p class="hint">用最少的轉帳次數，把所有人的帳結清。</p>
-      <div id="settlementList"></div>
+      <h2>公用支出</h2>
+      <p class="hint">標成「公用支出」的品項只列在這裡、不攤到個人頭上，你們自行處理。</p>
+      <div id="settlePublic"></div>
     </div>
   </section>
 

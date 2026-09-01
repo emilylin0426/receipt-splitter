@@ -1,5 +1,6 @@
 const LOCAL_KEY = 'receiptSplitter.localRecords';
-const NOTE_KEY = 'receiptSplitter.itemNotes';
+const EDIT_KEY = 'receiptSplitter.itemEdits';
+const OLD_NOTE_KEY = 'receiptSplitter.itemNotes';
 
 let baseData = { people: [], records: [] };
 let localRecords = [];
@@ -11,16 +12,17 @@ async function init() {
   bindTabs();
   bindAddView();
   bindFilters();
-  bindNoteEditing();
+  bindItemEditing();
   loadLocalRecords();
   await loadBaseData();
   backfillIds();
-  applyNoteOverlay();
+  migrateOldEdits();
+  applyEdits();
   populateFilters();
   renderAll();
 }
 
-// 保底：每筆紀錄都要有 id，備註才有穩定的 key 可以掛。
+// 保底：每筆紀錄都要有 id，備註 / 分帳的 overlay 才有穩定的 key 可以掛。
 function backfillIds() {
   (baseData.records || []).forEach((r, i) => {
     if (!r.id) r.id = `${r.date || 'rec'}-${i}`;
@@ -41,13 +43,22 @@ function getAllRecords() {
   return [...baseData.records, ...localRecords];
 }
 
+// 只回傳「人」，不含公用支出。
 function getAllPeople() {
   const set = new Set(baseData.people || []);
   getAllRecords().forEach(r => {
-    if (r.payer) set.add(r.payer);
-    (r.items || []).forEach(it => (it.sharedBy || []).forEach(p => set.add(p)));
+    if (r.payer && r.payer !== PUBLIC_PAYER) set.add(r.payer);
+    (r.items || []).forEach(it => {
+      (it.split || []).forEach(s => { if (s && s.who && s.who !== PUBLIC_PAYER) set.add(s.who); });
+      (it.sharedBy || []).forEach(p => set.add(p));
+    });
   });
   return [...set];
+}
+
+// 分帳下拉選單的對象：所有人 + 公用支出。
+function getShareTargets() {
+  return [...getAllPeople(), PUBLIC_PAYER];
 }
 
 /* ---------------- tabs ---------------- */
@@ -103,6 +114,15 @@ function fillSelect(sel, values, allLabel) {
   if (values.includes(previous)) sel.value = previous;
 }
 
+function recordConsumers(record) {
+  const people = getAllPeople();
+  const set = new Set();
+  (record.items || []).forEach(it => {
+    Object.keys(itemShares(it, people)).forEach(who => set.add(who));
+  });
+  return set;
+}
+
 function getFilteredRecords() {
   const person = document.getElementById('filterPerson').value;
   const store = document.getElementById('filterStore').value;
@@ -111,12 +131,31 @@ function getFilteredRecords() {
   return getAllRecords()
     .filter(r => !date || r.date === date)
     .filter(r => !store || r.store === store)
-    .filter(r => !person || r.payer === person || (r.items || []).some(it => (it.sharedBy || []).includes(person)))
+    .filter(r => !person || r.payer === person || recordConsumers(r).has(person))
     .sort((a, b) => (a.date < b.date ? 1 : -1));
+}
+
+// 品項的分帳摘要，沒有自訂分帳就回空字串（列表上什麼都不顯示）。
+function splitSummary(item) {
+  let rows = Array.isArray(item.split) && item.split.length ? item.split : null;
+  if (!rows && Array.isArray(item.sharedBy) && item.sharedBy.length) {
+    rows = item.sharedBy.map(w => ({ who: w, units: 1 }));
+  }
+  if (!rows) return '';
+  return rows
+    .filter(r => r && r.who)
+    .map(r => {
+      const who = r.who === PUBLIC_PAYER ? '公用' : r.who;
+      return Number(r.units) > 1 ? `${who}×${r.units}` : who;
+    })
+    .join(' · ');
 }
 
 function renderList() {
   const container = document.getElementById('recordList');
+  const expanded = new Set(
+    [...container.querySelectorAll('.receipt-card.expanded')].map(c => c.dataset.id)
+  );
   const records = getFilteredRecords();
 
   if (records.length === 0) {
@@ -136,16 +175,18 @@ function renderList() {
         <div class="payer-line">由 <b>${escapeHtml(r.payer)}</b> 付款 · 共 ${(r.items || []).length} 項</div>
         <div class="toggle-hint">點擊展開細項 ▾</div>
         <div class="items">
-          ${(r.items || []).map((it, idx) => `
+          ${(r.items || []).map((it, idx) => {
+            const sum = splitSummary(it);
+            return `
             <div class="item-row">
               <div class="item-main">
-                <div class="item-name" data-note-trigger data-record="${escapeAttr(r.id)}" data-index="${idx}" title="點一下加中文註解">${escapeHtml(it.name)}</div>
-                <div class="item-shared">${(it.sharedBy || []).map(escapeHtml).join('、') || '全員均分'}</div>
+                <div class="item-name" data-note-trigger data-record="${escapeAttr(r.id)}" data-index="${idx}" title="點品名可加中文註解 / 分帳">${escapeHtml(it.name)}</div>
+                ${sum ? `<div class="split-summary">${escapeHtml(sum)}</div>` : ''}
               </div>
               <div class="item-note" data-note-cell data-record="${escapeAttr(r.id)}" data-index="${idx}">${it.note ? escapeHtml(it.note) : ''}</div>
               <div class="item-price">¥${formatNum(it.price)}</div>
-            </div>
-          `).join('')}
+            </div>`;
+          }).join('')}
           <div class="total-row"><span>合計</span><span>¥${formatNum(total)}</span></div>
         </div>
       </div>
@@ -153,8 +194,9 @@ function renderList() {
   }).join('');
 
   container.querySelectorAll('.receipt-card').forEach(card => {
+    if (expanded.has(card.dataset.id)) card.classList.add('expanded');
     card.addEventListener('click', e => {
-      // 點品名或備註欄是要編輯註解，不要順便把卡片收合／展開
+      // 點品名 / 備註欄是要編輯，不要順便把卡片收合展開
       if (e.target.closest('.item-name') || e.target.closest('.item-note')) return;
       card.classList.toggle('expanded');
     });
@@ -163,8 +205,15 @@ function renderList() {
 
 function renderChart() {
   const people = getAllPeople();
-  const records = getAllRecords();
-  const { paid, owed } = calcBalances(records, people);
+  const totals = {};
+  people.forEach(p => { totals[p] = 0; });
+
+  getAllRecords().forEach(r => (r.items || []).forEach(it => {
+    Object.entries(itemShares(it, people)).forEach(([who, amt]) => {
+      if (who === PUBLIC_PAYER) return;
+      totals[who] = (totals[who] || 0) + amt;
+    });
+  }));
 
   const ctx = document.getElementById('spendChart');
   if (chartInstance) chartInstance.destroy();
@@ -173,8 +222,8 @@ function renderChart() {
     data: {
       labels: people,
       datasets: [{
-        label: '實際分攤金額（owed）',
-        data: people.map(p => Math.round(owed[p] || 0)),
+        label: '每人分攤總額',
+        data: people.map(p => Math.round(totals[p] || 0)),
         backgroundColor: '#b4392b'
       }]
     },
@@ -186,45 +235,71 @@ function renderChart() {
   });
 }
 
-/* ---------------- per-item chinese notes ---------------- */
+/* ---------------- per-item edits: 中文備註 + 分帳 ---------------- */
 
 /*
- * 備註存兩個地方：
- *  1. 直接掛在 record.items[i].note 上，這樣「匯出完整資料檔」會一起帶出去，push 之後大家都看得到。
- *  2. 另外在 localStorage 疊一份 overlay，讓還沒匯出就重新整理頁面時備註不會消失。
+ * 備註和分帳都存兩個地方：
+ *  1. 直接掛在 record.items[i] 上（it.note / it.split），「匯出完整資料檔」會一起帶出去，
+ *     push 之後大家都看得到。
+ *  2. 另外在 localStorage（EDIT_KEY）疊一份 overlay，讓還沒匯出就重新整理頁面時不會消失。
  * 讀完 data/expenses.json 後，用 overlay 蓋一次，之後才 render。
+ *
+ * overlay 結構：{ [recordId]: { [itemIndex]: { note?: string, split?: [{who,units}] } } }
  */
 
-function loadNoteOverlay() {
+function loadEdits() {
   try {
-    return JSON.parse(localStorage.getItem(NOTE_KEY) || '{}');
+    return JSON.parse(localStorage.getItem(EDIT_KEY) || '{}');
   } catch (e) {
     return {};
   }
 }
 
-function saveNoteOverlay(overlay) {
-  localStorage.setItem(NOTE_KEY, JSON.stringify(overlay));
+function saveEdits(overlay) {
+  localStorage.setItem(EDIT_KEY, JSON.stringify(overlay));
 }
 
-function applyNoteOverlay() {
-  const overlay = loadNoteOverlay();
+// 舊版本只存備註、格式是 { rid: { idx: "字串" } }，搬成新結構。
+function migrateOldEdits() {
+  if (localStorage.getItem(EDIT_KEY)) return;
+  let old;
+  try {
+    old = JSON.parse(localStorage.getItem(OLD_NOTE_KEY) || 'null');
+  } catch (e) {
+    old = null;
+  }
+  if (!old) return;
+  const next = {};
+  Object.entries(old).forEach(([rid, notes]) => {
+    next[rid] = {};
+    Object.entries(notes).forEach(([idx, note]) => {
+      if (note) next[rid][idx] = { note };
+    });
+  });
+  saveEdits(next);
+  localStorage.removeItem(OLD_NOTE_KEY);
+}
+
+function applyEdits() {
+  const overlay = loadEdits();
   getAllRecords().forEach(r => {
-    const notes = overlay[r.id];
-    if (!notes) return;
+    const bucket = overlay[r.id];
+    if (!bucket) return;
     (r.items || []).forEach((it, i) => {
-      const n = notes[i];
-      if (n != null && n !== '') it.note = n;
+      const entry = bucket[i];
+      if (!entry) return;
+      if (entry.note != null && entry.note !== '') it.note = entry.note;
+      if (Array.isArray(entry.split) && entry.split.length) it.split = entry.split;
     });
   });
 }
 
-function bindNoteEditing() {
+function bindItemEditing() {
   const list = document.getElementById('recordList');
   list.addEventListener('click', e => {
     const trigger = e.target.closest('[data-note-trigger]');
     if (!trigger) return;
-    openNoteEditor(trigger.dataset.record, Number(trigger.dataset.index));
+    openItemEditor(trigger.dataset.record, Number(trigger.dataset.index));
   });
 }
 
@@ -233,99 +308,313 @@ function findNoteCell(recordId, index) {
     .find(c => c.dataset.record === recordId && Number(c.dataset.index) === index);
 }
 
-function renderNoteCell(cell, item) {
+function renderItemCell(cell, item) {
   cell.textContent = item && item.note ? item.note : '';
 }
 
-function setNote(record, index, rawValue) {
-  const item = (record.items || [])[index];
-  if (!item) return;
-  const value = String(rawValue).trim();
-
-  if (value) item.note = value;
-  else delete item.note;
-
-  const overlay = loadNoteOverlay();
-  const bucket = overlay[record.id] || (overlay[record.id] = {});
-  if (value) {
-    bucket[index] = value;
-  } else {
-    delete bucket[index];
-    if (Object.keys(bucket).length === 0) delete overlay[record.id];
+// 從現有品項讀出可編輯的分帳列（沒有就回空陣列）。
+function currentSplitRows(item) {
+  if (Array.isArray(item.split) && item.split.length) {
+    return item.split
+      .filter(s => s && s.who)
+      .map(s => ({ who: s.who, units: Math.max(1, Math.floor(Number(s.units) || 1)) }));
   }
-  saveNoteOverlay(overlay);
-
-  // 本機暫存紀錄的備註也要寫回 localRecords
-  if (localRecords.some(lr => lr.id === record.id)) saveLocalRecords();
+  if (Array.isArray(item.sharedBy) && item.sharedBy.length) {
+    return item.sharedBy.map(w => ({ who: w, units: 1 }));
+  }
+  return [];
 }
 
-function openNoteEditor(recordId, index) {
+function openItemEditor(recordId, index) {
   const cell = findNoteCell(recordId, index);
-  if (!cell || cell.querySelector('input')) return;
+  if (!cell || cell.querySelector('.item-pop')) return;
 
   const record = getAllRecords().find(r => r.id === recordId);
   const item = record && (record.items || [])[index];
   if (!item) return;
 
+  const targets = getShareTargets();
+  let rows = currentSplitRows(item);
+  let total = Math.max(1, rows.reduce((s, r) => s + r.units, 0) || 1);
+
   cell.textContent = '';
-  const input = document.createElement('input');
-  input.type = 'text';
-  input.className = 'note-input';
-  input.value = item.note || '';
-  input.maxLength = 40;
-  input.placeholder = '中文註解';
-  cell.appendChild(input);
-  input.focus();
-  input.select();
+  const pop = document.createElement('div');
+  pop.className = 'item-pop';
+  pop.innerHTML = `
+    <input class="note-input" type="text" maxlength="40" placeholder="中文註解（可留白）">
+    <button type="button" class="pop-btn split-toggle">分帳</button>
+    <div class="split-box" ${rows.length ? '' : 'hidden'}>
+      <label class="split-total">總數量
+        <input class="split-total-input" type="number" min="1" step="1" value="${total}">
+      </label>
+      <div class="split-rows"></div>
+      <button type="button" class="pop-btn split-more">繼續分帳</button>
+      <div class="split-warn" hidden></div>
+    </div>
+  `;
+  cell.appendChild(pop);
+
+  const noteInput = pop.querySelector('.note-input');
+  noteInput.value = item.note || '';
+  const box = pop.querySelector('.split-box');
+  const totalInput = pop.querySelector('.split-total-input');
+  const rowsWrap = pop.querySelector('.split-rows');
+  const moreBtn = pop.querySelector('.split-more');
+  const warn = pop.querySelector('.split-warn');
+
+  const assigned = () => rows.reduce((s, r) => s + (Number(r.units) || 0), 0);
+
+  function renderRows() {
+    const multi = total > 1;
+    rowsWrap.innerHTML = rows.map((row, i) => {
+      const opts = targets.map(t =>
+        `<option value="${escapeAttr(t)}" ${t === row.who ? 'selected' : ''}>${escapeHtml(t)}</option>`
+      ).join('');
+      let cnt = '';
+      if (multi) {
+        const cap = Math.max(row.units, total - assigned() + (Number(row.units) || 0), 1);
+        let o = '';
+        for (let n = 1; n <= cap; n++) {
+          o += `<option value="${n}" ${n === row.units ? 'selected' : ''}>${n}</option>`;
+        }
+        cnt = `<select class="split-cnt" data-i="${i}">${o}</select>`;
+      }
+      return `<div class="split-row">
+        <select class="split-who" data-i="${i}"><option value="">分給誰…</option>${opts}</select>
+        ${cnt}
+        <button type="button" class="split-del" data-i="${i}" title="移除">✕</button>
+      </div>`;
+    }).join('');
+
+    const rem = total - assigned();
+    moreBtn.hidden = multi ? rem <= 0 : false;
+
+    if (multi && rem > 0) {
+      warn.hidden = false;
+      warn.textContent = `還有 ${rem} 個沒分，關掉後算 ${record.payer} 個人的`;
+    } else if (multi && rem < 0) {
+      warn.hidden = false;
+      warn.textContent = `已分配 ${assigned()} 個，超過總數量 ${total} 個`;
+    } else {
+      warn.hidden = true;
+    }
+  }
+  renderRows();
+
+  pop.querySelector('.split-toggle').addEventListener('click', () => {
+    box.hidden = !box.hidden;
+    if (!box.hidden && rows.length === 0) {
+      rows.push({ who: '', units: 1 });
+      renderRows();
+    }
+  });
+
+  totalInput.addEventListener('input', () => {
+    total = Math.max(1, Math.floor(Number(totalInput.value) || 1));
+    renderRows();
+  });
+
+  moreBtn.addEventListener('click', () => {
+    const rem = total - assigned();
+    rows.push({ who: '', units: total > 1 ? Math.max(1, rem) : 1 });
+    renderRows();
+  });
+
+  rowsWrap.addEventListener('change', e => {
+    const i = Number(e.target.dataset.i);
+    if (Number.isNaN(i) || !rows[i]) return;
+    if (e.target.classList.contains('split-who')) rows[i].who = e.target.value;
+    else if (e.target.classList.contains('split-cnt')) rows[i].units = Math.max(1, Number(e.target.value) || 1);
+    renderRows();
+  });
+
+  rowsWrap.addEventListener('click', e => {
+    if (!e.target.classList.contains('split-del')) return;
+    const i = Number(e.target.dataset.i);
+    rows.splice(i, 1);
+    renderRows();
+  });
+
+  // popup 內的點擊不要冒泡到卡片
+  pop.addEventListener('mousedown', e => e.stopPropagation());
+  pop.addEventListener('click', e => e.stopPropagation());
 
   let closed = false;
-  const close = (save) => {
+  function close(save) {
     if (closed) return;
     closed = true;
-    if (save) setNote(record, index, input.value);
-    renderNoteCell(cell, item);
-  };
+    document.removeEventListener('mousedown', onDocDown, true);
+    if (save) {
+      commitItemEditor(record, index, {
+        note: noteInput.value,
+        rows: box.hidden ? null : rows,
+        total
+      });
+    }
+    renderItemCell(cell, item);
+  }
+  function onDocDown(e) {
+    if (!pop.contains(e.target)) close(true);
+  }
+  setTimeout(() => document.addEventListener('mousedown', onDocDown, true), 0);
 
-  input.addEventListener('click', e => e.stopPropagation());
-  input.addEventListener('blur', () => close(true));
-  input.addEventListener('keydown', e => {
-    if (e.key === 'Enter') { e.preventDefault(); input.blur(); }
-    else if (e.key === 'Escape') { e.preventDefault(); close(false); }
+  pop.addEventListener('keydown', e => {
+    if (e.key === 'Escape') { e.preventDefault(); close(false); }
   });
+
+  noteInput.focus();
+  noteInput.select();
 }
 
-/* ---------------- settlement ---------------- */
+function commitItemEditor(record, index, { note, rows, total }) {
+  const item = (record.items || [])[index];
+  if (!item) return;
+
+  // ---- 備註 ----
+  const noteVal = String(note || '').trim();
+  if (noteVal) item.note = noteVal;
+  else delete item.note;
+
+  // ---- 分帳 ----
+  let splitVal; // undefined = 這次沒動分帳
+  if (rows) {
+    const clean = rows
+      .filter(r => r.who)
+      .map(r => ({
+        who: r.who,
+        units: total > 1 ? Math.max(1, Math.floor(Number(r.units) || 1)) : 1
+      }));
+
+    // 買了不只一個：沒分完的數量算 payer 個人的（Q4）
+    if (total > 1) {
+      const leftover = total - clean.reduce((s, r) => s + r.units, 0);
+      if (leftover > 0 && record.payer) {
+        const hit = clean.find(r => r.who === record.payer);
+        if (hit) hit.units += leftover;
+        else clean.push({ who: record.payer, units: leftover });
+      }
+    }
+    // 單一數量、又沒選任何人 → 當作沒特別分（回到全員均分預設），不要硬塞給 payer
+
+    // 合併同一個 who 的多列
+    const merged = [];
+    clean.forEach(r => {
+      const hit = merged.find(m => m.who === r.who);
+      if (hit) hit.units += r.units;
+      else merged.push({ ...r });
+    });
+
+    splitVal = merged;
+    if (splitVal.length) item.split = splitVal;
+    else delete item.split;
+  }
+
+  // ---- overlay ----
+  const overlay = loadEdits();
+  const bucket = overlay[record.id] || (overlay[record.id] = {});
+  const entry = bucket[index] || (bucket[index] = {});
+  if (noteVal) entry.note = noteVal; else delete entry.note;
+  if (splitVal !== undefined) {
+    if (splitVal.length) entry.split = splitVal;
+    else delete entry.split;
+  }
+  if (Object.keys(entry).length === 0) delete bucket[index];
+  if (Object.keys(bucket).length === 0) delete overlay[record.id];
+  saveEdits(overlay);
+
+  if (localRecords.some(lr => lr.id === record.id)) saveLocalRecords();
+
+  renderList();
+  renderChart();
+  renderSettlement();
+  populateFilters();
+}
+
+/* ---------------- settlement：依消費者分組 ---------------- */
 
 function renderSettlement() {
   const people = getAllPeople();
   const records = getAllRecords();
-  const { balances } = calcBalances(records, people);
 
-  const balanceList = document.getElementById('balanceList');
-  if (people.length === 0) {
-    balanceList.innerHTML = '<li>尚無資料</li>';
+  const byPerson = {};
+  people.forEach(p => { byPerson[p] = []; });
+  const publicLines = [];
+
+  records.forEach(r => {
+    (r.items || []).forEach(it => {
+      Object.entries(itemShares(it, people)).forEach(([who, amt]) => {
+        if (amt <= 0.5) return;
+        const line = {
+          date: r.date, store: r.store, name: it.name,
+          note: it.note || '', payer: r.payer, amt
+        };
+        if (who === PUBLIC_PAYER) publicLines.push(line);
+        else (byPerson[who] || (byPerson[who] = [])).push(line);
+      });
+    });
+  });
+
+  const host = document.getElementById('settleByPerson');
+  const names = Object.keys(byPerson);
+
+  if (records.length === 0 || names.length === 0) {
+    host.innerHTML = '<div class="empty-state">尚無資料</div>';
   } else {
-    balanceList.innerHTML = people.map(p => {
-      const v = balances[p];
-      const cls = v > 0 ? 'pos' : v < 0 ? 'neg' : '';
-      const sign = v > 0 ? '+' : '';
-      return `<li><span>${escapeHtml(p)}</span><span class="amt ${cls}">${sign}¥${formatNum(v)}</span></li>`;
+    host.innerHTML = names.map(p => {
+      const lines = byPerson[p].slice().sort((a, b) => (a.date < b.date ? -1 : 1));
+      if (lines.length === 0) {
+        return `<div class="settle-person">
+          <div class="settle-person-head"><span class="sp-name">${escapeHtml(p)}</span>
+          <span class="sp-sum">沒有消費紀錄</span></div></div>`;
+      }
+      const consumed = lines.reduce((s, l) => s + l.amt, 0);
+      const owedLines = lines.filter(l => l.payer !== p);
+      const owed = owedLines.reduce((s, l) => s + l.amt, 0);
+      const byPayer = {};
+      owedLines.forEach(l => { byPayer[l.payer] = (byPayer[l.payer] || 0) + l.amt; });
+
+      return `
+        <div class="settle-person">
+          <div class="settle-person-head">
+            <span class="sp-name">${escapeHtml(p)}</span>
+            <span class="sp-sum">消費 ¥${formatNum(Math.round(consumed))}
+              ${owed > 0.5 ? `<span class="sp-owe">要還 ¥${formatNum(Math.round(owed))}</span>` : ''}
+            </span>
+          </div>
+          <div class="settle-lines">
+            ${lines.map(l => `
+              <div class="settle-line ${l.payer !== p ? 'owed' : ''}">
+                <span class="sl-main">${escapeHtml(l.name)}${l.note ? ` <span class="sl-note">${escapeHtml(l.note)}</span>` : ''}
+                  <span class="sl-meta">${escapeHtml(l.date)} · ${escapeHtml(l.store)}${l.payer !== p ? ` · ${escapeHtml(l.payer)} 付` : ''}</span>
+                </span>
+                <span class="sl-amt">¥${formatNum(Math.round(l.amt))}</span>
+              </div>
+            `).join('')}
+          </div>
+          ${Object.keys(byPayer).length ? `<div class="settle-topay">${
+            Object.entries(byPayer).map(([py, v]) =>
+              `<span>給 ${escapeHtml(py)} <b>¥${formatNum(Math.round(v))}</b></span>`).join('')
+          }</div>` : ''}
+        </div>`;
     }).join('');
   }
 
-  const settlementDiv = document.getElementById('settlementList');
-  const transactions = simplifyDebts(balances);
-  if (transactions.length === 0) {
-    settlementDiv.innerHTML = '<div class="empty-state">目前帳務已平衡，不需要轉帳</div>';
+  const pub = document.getElementById('settlePublic');
+  if (publicLines.length === 0) {
+    pub.innerHTML = '<div class="empty-state">沒有標成「公用支出」的品項</div>';
   } else {
-    settlementDiv.innerHTML = transactions.map(t => `
-      <div class="settlement-item">
-        <span>${escapeHtml(t.from)}</span>
-        <span class="arrow">→</span>
-        <span>${escapeHtml(t.to)}</span>
-        <span class="amt">¥${formatNum(t.amount)}</span>
-      </div>
-    `).join('');
+    const t = publicLines.reduce((s, l) => s + l.amt, 0);
+    pub.innerHTML = publicLines
+      .slice()
+      .sort((a, b) => (a.date < b.date ? -1 : 1))
+      .map(l => `
+        <div class="settle-line">
+          <span class="sl-main">${escapeHtml(l.name)}
+            <span class="sl-meta">${escapeHtml(l.date)} · ${escapeHtml(l.store)} · ${escapeHtml(l.payer)} 付</span>
+          </span>
+          <span class="sl-amt">¥${formatNum(Math.round(l.amt))}</span>
+        </div>`).join('') +
+      `<div class="settle-line total"><span class="sl-main">合計</span><span class="sl-amt">¥${formatNum(Math.round(t))}</span></div>`;
   }
 }
 
@@ -384,16 +673,18 @@ function handlePreview() {
       </div>
       <div class="payer-line">由 <b>${escapeHtml(parsed.payer)}</b> 付款</div>
       <div class="items" style="display:block">
-        ${parsed.items.map(it => `
+        ${parsed.items.map(it => {
+          const sum = splitSummary(it);
+          return `
           <div class="item-row">
             <div class="item-main">
               <div class="item-name">${escapeHtml(it.name)}</div>
-              <div class="item-shared">${(it.sharedBy || []).map(escapeHtml).join('、') || '全員均分'}</div>
+              ${sum ? `<div class="split-summary">${escapeHtml(sum)}</div>` : ''}
             </div>
             <div class="item-note">${it.note ? escapeHtml(it.note) : ''}</div>
             <div class="item-price">¥${formatNum(it.price)}</div>
-          </div>
-        `).join('')}
+          </div>`;
+        }).join('')}
         <div class="total-row"><span>合計</span><span>¥${formatNum(total)}</span></div>
       </div>
     </div>
@@ -410,6 +701,14 @@ function validateRecord(r) {
   for (const it of r.items) {
     if (!it.name) return '每個 item 都需要 name';
     if (typeof it.price !== 'number') return `品項「${it.name || ''}」的 price 必須是數字`;
+    if (it.split != null) {
+      if (!Array.isArray(it.split)) return `品項「${it.name}」的 split 必須是陣列`;
+      for (const s of it.split) {
+        if (!s || !s.who || typeof s.units !== 'number') {
+          return `品項「${it.name}」的 split 每項都要有 who 和數字 units`;
+        }
+      }
+    }
   }
   return null;
 }
