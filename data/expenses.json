@@ -2,7 +2,8 @@
   "people": [
     "Emily",
     "Jenny",
-    "Ox"
+    "Ox",
+    "Unknown"
   ],
   "records": [
     {
@@ -14,17 +15,20 @@
         {
           "name": "ファミチキレッド",
           "price": 258,
-          "sharedBy": []
+          "sharedBy": [],
+          "note": "全家辣味炸雞"
         },
         {
           "name": "カルピス 濃いめ600",
           "price": 183,
-          "sharedBy": []
+          "sharedBy": [],
+          "note": "可爾必思（飲料）"
         },
         {
           "name": "日清どん兵衛 きつねうどん",
           "price": 267,
-          "sharedBy": []
+          "sharedBy": [],
+          "note": "豆皮泡麵"
         },
         {
           "name": "麦茶1L",
@@ -33,6 +37,93 @@
         }
       ],
       "id": "2026-08-26-6fni"
+    },
+    {
+      "date": "2026-08-26",
+      "store": "ライフ 浅草店",
+      "payer": "Jenny",
+      "currency": "JPY",
+      "items": [
+        {
+          "name": "森永おいしい牛乳900",
+          "price": 290,
+          "sharedBy": [],
+          "note": "牛奶"
+        },
+        {
+          "name": "LPのむYGブルーベリー",
+          "price": 160,
+          "sharedBy": [],
+          "note": "藍莓優格"
+        },
+        {
+          "name": "ごはん（200g）",
+          "price": 216,
+          "sharedBy": [],
+          "note": "白飯"
+        },
+        {
+          "name": "金のつぶたまご醤油たれ",
+          "price": 107,
+          "sharedBy": [],
+          "note": "納豆"
+        },
+        {
+          "name": "国産大きなひきわり",
+          "price": 161,
+          "sharedBy": [],
+          "note": "納豆"
+        },
+        {
+          "name": "国産めかぶだし醤油味3",
+          "price": 268,
+          "sharedBy": [],
+          "note": "不好吃海帶"
+        },
+        {
+          "name": "手造りおにぎり（鮭・玉子）（割引後）",
+          "price": 209,
+          "sharedBy": [],
+          "note": "鮭魚玉子飯糰"
+        },
+        {
+          "name": "三角おにぎり（明太子）（割引後）",
+          "price": 135,
+          "sharedBy": [],
+          "note": "明太子飯糰"
+        },
+        {
+          "name": "ローストビーフスライス（割引後）",
+          "price": 585,
+          "sharedBy": [],
+          "note": "牛肉片"
+        },
+        {
+          "name": "本鮪中とろ刺身（割引後）",
+          "price": 847,
+          "sharedBy": [],
+          "note": "鮪魚生魚片"
+        },
+        {
+          "name": "オクラと山芋のねばねばサ",
+          "price": 322,
+          "sharedBy": [],
+          "note": "綜合生菜沙拉"
+        },
+        {
+          "name": "毎日の食卓白たまご10個",
+          "price": 301,
+          "sharedBy": [],
+          "note": "蛋"
+        },
+        {
+          "name": "A サーモントラウト切落し",
+          "price": 430,
+          "sharedBy": [],
+          "note": "鮭魚生魚片"
+        }
+      ],
+      "id": "2026-08-26-bsj9"
     },
     {
       "date": "2026-08-27",
@@ -44,27 +135,37 @@
           "name": "メラノCC薬用しみ対策",
           "price": 598,
           "sharedBy": [],
-          "note": "維他命Ｃ洗面乳"
+          "note": "維他命Ｃ化妝水"
         },
         {
           "name": "ソフティモ スピーディクレンジング",
           "price": 550,
-          "sharedBy": []
+          "sharedBy": [],
+          "note": "卸妝油"
         },
         {
           "name": "メラノCC ディープクリア",
           "price": 540,
-          "sharedBy": []
+          "sharedBy": [],
+          "note": "維他命Ｃ洗面乳"
         },
         {
           "name": "クリーンデンタル 美白ケア",
           "price": 1200,
-          "sharedBy": []
+          "sharedBy": [],
+          "note": "美白牙膏（粉）"
         },
         {
           "name": "ヘパソフト プラスチューブ",
           "price": 838,
-          "sharedBy": []
+          "sharedBy": [],
+          "note": "小護士過敏藥膏（皓）",
+          "split": [
+            {
+              "who": "Ox",
+              "units": 1
+            }
+          ]
         },
         {
           "name": "キレートレモン クエン酸2（135円×2個）",
@@ -126,6 +227,269 @@
       "id": "2026-08-27-cxr6"
     },
     {
+      "date": "2026-08-27",
+      "store": "セブン-イレブン 台東松が谷1丁目店",
+      "payer": "Jenny",
+      "currency": "JPY",
+      "items": [
+        {
+          "name": "オハヨージャージー牛乳プリン",
+          "price": 199,
+          "sharedBy": [],
+          "note": "布丁"
+        }
+      ],
+      "id": "2026-08-27-8p5g"
+    },
+    {
+      "date": "2026-08-27",
+      "store": "ライフ 浅草店",
+      "payer": "Jenny",
+      "currency": "JPY",
+      "items": [
+        {
+          "name": "SL北海道プレーンヨーグ",
+          "price": 149,
+          "sharedBy": []
+        },
+        {
+          "name": "ブルガリアBB&3種1",
+          "price": 150,
+          "sharedBy": []
+        },
+        {
+          "name": "長ねぎ・小ねぎカット25",
+          "price": 108,
+          "sharedBy": []
+        },
+        {
+          "name": "A 桃（2コX単398、値引後）",
+          "price": 853,
+          "sharedBy": []
+        }
+      ],
+      "id": "2026-08-27-796n"
+    },
+    {
+      "date": "2026-08-27",
+      "store": "ライフ 浅草店",
+      "payer": "Jenny",
+      "currency": "JPY",
+      "items": [
+        {
+          "name": "バリスタBLACK",
+          "price": 107,
+          "sharedBy": []
+        },
+        {
+          "name": "健康ミネラルむぎ茶2L",
+          "price": 182,
+          "sharedBy": []
+        },
+        {
+          "name": "金吾堂 厚焼しょうゆ7枚",
+          "price": 192,
+          "sharedBy": []
+        },
+        {
+          "name": "マルコメ お徳用料亭",
+          "price": 430,
+          "sharedBy": []
+        },
+        {
+          "name": "マルコメ顆粒みそ汁あおさ",
+          "price": 149,
+          "sharedBy": []
+        },
+        {
+          "name": "くらこん塩こんぶ大",
+          "price": 322,
+          "sharedBy": []
+        },
+        {
+          "name": "サントリー クラフトボス",
+          "price": 107,
+          "sharedBy": []
+        },
+        {
+          "name": "クラシエ ヨーロピアンワ",
+          "price": 226,
+          "sharedBy": []
+        },
+        {
+          "name": "コロロマスカット48g",
+          "price": 138,
+          "sharedBy": []
+        },
+        {
+          "name": "キレートレモンダブルL（2コX単99）",
+          "price": 214,
+          "sharedBy": []
+        },
+        {
+          "name": "ミモナ アウトドアスパイ",
+          "price": 842,
+          "sharedBy": []
+        },
+        {
+          "name": "A 大塚ポカリ1L用66g",
+          "price": 103,
+          "sharedBy": []
+        }
+      ],
+      "id": "2026-08-27-8t3u"
+    },
+    {
+      "date": "2026-08-27",
+      "store": "ABC-MART（ABC西武新宿ぺぺ）",
+      "payer": "Jenny",
+      "currency": "JPY",
+      "items": [
+        {
+          "name": "ASICS 1012B930.001",
+          "price": 12000,
+          "sharedBy": []
+        }
+      ],
+      "id": "2026-08-27-gba9"
+    },
+    {
+      "date": "2026-08-27",
+      "store": "okadaya SHINJUKU（毛糸）",
+      "payer": "Emily",
+      "currency": "JPY",
+      "items": [
+        {
+          "name": "外 Opal 単色（1点目）",
+          "price": 1870,
+          "sharedBy": []
+        },
+        {
+          "name": "外 Opal 単色（2点目）",
+          "price": 1870,
+          "sharedBy": []
+        }
+      ],
+      "id": "2026-08-27-gpkw"
+    },
+    {
+      "date": "2026-08-27",
+      "store": "牛舌の檸檬",
+      "payer": "Jenny",
+      "currency": "JPY",
+      "items": [
+        {
+          "name": "定 小さい極（イクラご飯付き）",
+          "price": 4160
+        },
+        {
+          "name": "定 極みとスキヤキ 中",
+          "price": 5900
+        },
+        {
+          "name": "定 牛たん焼 中",
+          "price": 2800
+        },
+        {
+          "name": "追 檸檬ソーダ",
+          "price": 500
+        },
+        {
+          "name": "抹茶レモンティー",
+          "price": 700
+        }
+      ],
+      "id": "2026-08-27-yllg"
+    },
+    {
+      "date": "2026-08-27",
+      "store": "マクドナルド 稲荷町駅前店",
+      "payer": "Jenny",
+      "currency": "JPY",
+      "items": [
+        {
+          "name": "エビフィレオセット",
+          "price": 840
+        }
+      ],
+      "id": "2026-08-27-h2ym"
+    },
+    {
+      "date": "2026-08-27",
+      "store": "ユニクロ 浅草店",
+      "payer": "Jenny",
+      "currency": "JPY",
+      "items": [
+        {
+          "name": "Wバギーバレルレッグジーンズ",
+          "price": 3627
+        },
+        {
+          "name": "Wスマートキュロット",
+          "price": 3628
+        },
+        {
+          "name": "エアリズムボクサーブリーフ",
+          "price": 900
+        },
+        {
+          "name": "Wエアリズムブラタンクトップ",
+          "price": 1173
+        },
+        {
+          "name": "Wエアリズムコットンブラタンク",
+          "price": 1809
+        }
+      ],
+      "id": "2026-08-27-gh5w"
+    },
+    {
+      "date": "2026-08-28",
+      "store": "maruetsu 東上野店",
+      "payer": "Jenny",
+      "currency": "JPY",
+      "items": [
+        {
+          "name": "ラ王味噌3食",
+          "price": 323,
+          "sharedBy": [],
+          "note": "味噌泡麵"
+        },
+        {
+          "name": "サラダ（割引後）",
+          "price": 125,
+          "sharedBy": [],
+          "note": "高麗菜絲"
+        },
+        {
+          "name": "超熟6枚（割引後）",
+          "price": 193,
+          "sharedBy": [],
+          "note": "吐司"
+        },
+        {
+          "name": "輸入牛バラカルビ（割引後）",
+          "price": 504,
+          "sharedBy": [],
+          "note": "牛肉片"
+        }
+      ],
+      "id": "2026-08-28-sssh"
+    },
+    {
+      "date": "2026-08-28",
+      "store": "あいだや（上野）",
+      "payer": "Jenny",
+      "currency": "JPY",
+      "items": [
+        {
+          "name": "2種200g／味玉／サーロイン・担（×3）",
+          "price": 6900
+        }
+      ],
+      "id": "2026-08-28-5561"
+    },
+    {
       "date": "2026-08-29",
       "store": "ABC-MART 上野",
       "payer": "Jenny",
@@ -170,6 +534,412 @@
       "id": "2026-08-29-nx79"
     },
     {
+      "date": "2026-08-29",
+      "store": "セブン-イレブン 新御徒町駅西店",
+      "payer": "Jenny",
+      "currency": "JPY",
+      "items": [
+        {
+          "name": "7Cコウバシシリアルシュガーバターノキ",
+          "price": 300,
+          "sharedBy": []
+        },
+        {
+          "name": "明治おいしいミルク紅茶450",
+          "price": 227,
+          "sharedBy": []
+        },
+        {
+          "name": "7-11 ソックス 23-25cm",
+          "price": 550,
+          "sharedBy": []
+        }
+      ],
+      "id": "2026-08-29-4rob"
+    },
+    {
+      "date": "2026-08-29",
+      "store": "スシロー 上野店",
+      "payer": "Jenny",
+      "currency": "JPY",
+      "items": [
+        {
+          "name": "150円皿（9点）",
+          "price": 1350
+        },
+        {
+          "name": "210円皿（2点）",
+          "price": 420
+        },
+        {
+          "name": "170円皿（4点）",
+          "price": 680
+        },
+        {
+          "name": "180円皿",
+          "price": 180
+        },
+        {
+          "name": "480円皿",
+          "price": 480
+        },
+        {
+          "name": "300円一品",
+          "price": 300
+        },
+        {
+          "name": "290円茶碗蒸し（2点）",
+          "price": 580
+        },
+        {
+          "name": "420円パフェ器",
+          "price": 420
+        }
+      ],
+      "id": "2026-08-29-kuf5"
+    },
+    {
+      "date": "2026-08-29",
+      "store": "ライフ 浅草店",
+      "payer": "Jenny",
+      "currency": "JPY",
+      "items": [
+        {
+          "name": "フルーツスパーク500",
+          "price": 107,
+          "sharedBy": []
+        },
+        {
+          "name": "Kおいしい無糖ミルク",
+          "price": 96,
+          "sharedBy": []
+        }
+      ],
+      "id": "2026-08-29-45om"
+    },
+    {
+      "date": "2026-08-29",
+      "store": "ライフ 浅草店",
+      "payer": "Jenny",
+      "currency": "JPY",
+      "items": [
+        {
+          "name": "明治おいしい牛乳900",
+          "price": 279
+        },
+        {
+          "name": "明治ブルガリアYG400",
+          "price": 178
+        },
+        {
+          "name": "【縦】米国産牛バラカルビ",
+          "price": 1026
+        },
+        {
+          "name": "九州産和牛肩ロースうす",
+          "price": 1510
+        },
+        {
+          "name": "大盛りごはん（日本フード）",
+          "price": 324
+        },
+        {
+          "name": "大きなかにかま",
+          "price": 430
+        },
+        {
+          "name": "レタス",
+          "price": 181
+        },
+        {
+          "name": "毎日の食卓白たまご10個",
+          "price": 301
+        },
+        {
+          "name": "桃1玉（2コX単358、値引後）",
+          "price": 754
+        }
+      ],
+      "id": "2026-08-29-13hj"
+    },
+    {
+      "date": "2026-08-29",
+      "store": "ライフ 浅草店",
+      "payer": "Jenny",
+      "currency": "JPY",
+      "items": [
+        {
+          "name": "日清 ラ王醤油3食パック",
+          "price": 289
+        }
+      ],
+      "id": "2026-08-29-fnfz"
+    },
+    {
+      "date": "2026-08-29",
+      "store": "ユニクロ 御徒町店",
+      "payer": "Unknown",
+      "currency": "JPY",
+      "items": [
+        {
+          "name": "Wジャージーバレルレッグパンツ",
+          "price": 3627
+        },
+        {
+          "name": "Wジャージーバレルレッグパンツ",
+          "price": 3628
+        }
+      ],
+      "id": "2026-08-29-1ae9"
+    },
+    {
+      "date": "2026-08-29",
+      "store": "ユニクロ 御徒町店",
+      "payer": "Unknown",
+      "currency": "JPY",
+      "items": [
+        {
+          "name": "Wシフォンプリーツミディスカート",
+          "price": 3627
+        },
+        {
+          "name": "Wポロセーター",
+          "price": 1173
+        },
+        {
+          "name": "WクルーネックT",
+          "price": 900
+        }
+      ],
+      "id": "2026-08-29-2lxp"
+    },
+    {
+      "date": "2026-08-29",
+      "store": "GU 御徒町店",
+      "payer": "Jenny",
+      "currency": "JPY",
+      "items": [
+        {
+          "name": "WUVカットシアーパーカ",
+          "price": 2718
+        },
+        {
+          "name": "ソフトナイロンコクーンバッグ",
+          "price": 2719
+        },
+        {
+          "name": "WコットンスムースクルーネックT",
+          "price": 900
+        },
+        {
+          "name": "WドライミニT",
+          "price": 718
+        }
+      ],
+      "id": "2026-08-29-yhyu"
+    },
+    {
+      "date": "2026-08-29",
+      "store": "ユニクロ 御徒町店",
+      "payer": "Emily",
+      "currency": "JPY",
+      "items": [
+        {
+          "name": "Wジャージーバレルレッグパンツ",
+          "price": 3990
+        },
+        {
+          "name": "Wエアリズムブラタンクトップ",
+          "price": 1990
+        },
+        {
+          "name": "WクルーネックT",
+          "price": 990
+        }
+      ],
+      "id": "2026-08-29-s85l"
+    },
+    {
+      "date": "2026-08-29",
+      "store": "オーエスドラッグ 上野店",
+      "payer": "Jenny",
+      "currency": "JPY",
+      "items": [
+        {
+          "name": "キャベジンαプラス3",
+          "price": 1842
+        },
+        {
+          "name": "サロンパスローション",
+          "price": 509
+        },
+        {
+          "name": "トーンアップUVエッセ",
+          "price": 769
+        },
+        {
+          "name": "アンレーベルUVスティ",
+          "price": 1188
+        },
+        {
+          "name": "肌美精ターニングケア美",
+          "price": 963
+        },
+        {
+          "name": "肌美精薬用リンクル美容",
+          "price": 1001
+        },
+        {
+          "name": "サーレS 1.5gX5",
+          "price": 880
+        },
+        {
+          "name": "キズリバテープ半透明1",
+          "price": 188
+        },
+        {
+          "name": "コロスキン11ml（599×4）",
+          "price": 2635
+        },
+        {
+          "name": "ビオレUVアクアリッチ",
+          "price": 658
+        },
+        {
+          "name": "キスミー薬用ハンドクリ",
+          "price": 386
+        },
+        {
+          "name": "ロキソニンEXローシ",
+          "price": 1738
+        }
+      ],
+      "id": "2026-08-29-cay0"
+    },
+    {
+      "date": "2026-08-29",
+      "store": "ユニクロ 御徒町店",
+      "payer": "Jenny",
+      "currency": "JPY",
+      "items": [
+        {
+          "name": "Wエアリズムマトリカットメッシュパーカ",
+          "price": 1990
+        }
+      ],
+      "id": "2026-08-29-gxen"
+    },
+    {
+      "date": "2026-08-29",
+      "store": "GU 御徒町店",
+      "payer": "Ox",
+      "currency": "JPY",
+      "items": [
+        {
+          "name": "ドライフライフロントシャツ",
+          "price": 1990
+        }
+      ],
+      "id": "2026-08-29-wh8c"
+    },
+    {
+      "date": "2026-08-30",
+      "store": "LAWSON 東京タワー店",
+      "payer": "Jenny",
+      "currency": "JPY",
+      "items": [
+        {
+          "name": "MtR クリーミーウジマッチャラテ",
+          "price": 228
+        }
+      ],
+      "id": "2026-08-30-fqux"
+    },
+    {
+      "date": "2026-08-30",
+      "store": "一蘭 渋谷スペイン坂店",
+      "payer": "Jenny",
+      "currency": "JPY",
+      "items": [
+        {
+          "name": "ラーメン／Ramen",
+          "price": 1180
+        },
+        {
+          "name": "ラーメン／Ramen",
+          "price": 1180
+        },
+        {
+          "name": "ラーメン／Ramen",
+          "price": 1180
+        },
+        {
+          "name": "替玉／Kae-Dama",
+          "price": 210
+        }
+      ],
+      "id": "2026-08-30-bwhy"
+    },
+    {
+      "date": "2026-08-30",
+      "store": "3COINS 原宿本店",
+      "payer": "Jenny",
+      "currency": "JPY",
+      "items": [
+        {
+          "name": "0773塗りパン ピスタチオ味軽",
+          "price": 486
+        },
+        {
+          "name": "0731ジャケットホルダー",
+          "price": 330
+        }
+      ],
+      "id": "2026-08-30-ggnn"
+    },
+    {
+      "date": "2026-08-30",
+      "store": "もんじゃ焼き 渋谷マスダ亭",
+      "payer": "Jenny",
+      "currency": "JPY",
+      "items": [
+        {
+          "name": "カマンベールもち明太子×1",
+          "price": 1958
+        },
+        {
+          "name": "和風とろろサラダ×1",
+          "price": 1078
+        },
+        {
+          "name": "じゃがチーズベーコン×1",
+          "price": 1518
+        },
+        {
+          "name": "飲料×3",
+          "price": 1254
+        }
+      ],
+      "id": "2026-08-30-nlhc"
+    },
+    {
+      "date": "2026-08-30",
+      "store": "STARBUCKS 神宮前6丁目店",
+      "payer": "Emily",
+      "currency": "JPY",
+      "items": [
+        {
+          "name": "VIA フレーバー 抹茶5P（3点）",
+          "price": 2581
+        },
+        {
+          "name": "抹茶拿鐵",
+          "price": 600
+        }
+      ],
+      "id": "2026-08-30-p2uf"
+    },
+    {
       "date": "2026-08-31",
       "store": "八十八鎌倉",
       "payer": "Emily",
@@ -187,6 +957,499 @@
         }
       ],
       "id": "2026-08-31-y63q"
+    },
+    {
+      "date": "2026-08-31",
+      "store": "鎌倉釜飯 かまかま本店",
+      "payer": "Jenny",
+      "currency": "JPY",
+      "items": [
+        {
+          "name": "丼",
+          "price": 1980
+        },
+        {
+          "name": "丼",
+          "price": 2750
+        },
+        {
+          "name": "丼",
+          "price": 2750
+        },
+        {
+          "name": "一品料理",
+          "price": 660
+        }
+      ],
+      "id": "2026-08-31-vuvw"
+    },
+    {
+      "date": "2026-08-31",
+      "store": "Honeys ハニーズ 池袋アルタ店",
+      "payer": "Jenny",
+      "currency": "JPY",
+      "items": [
+        {
+          "name": "ジャケット（@¥1,480×1）",
+          "price": 1480
+        }
+      ],
+      "id": "2026-08-31-haoe"
+    },
+    {
+      "date": "2026-08-31",
+      "store": "無印良品 サンシャインシティアルパ",
+      "payer": "Jenny",
+      "currency": "JPY",
+      "items": [
+        {
+          "name": "吊るせるコレクションポーチx3",
+          "price": 3792
+        },
+        {
+          "name": "なめらかミディショーツ",
+          "price": 537
+        },
+        {
+          "name": "発酵ぬかどこ 補充用",
+          "price": 269
+        },
+        {
+          "name": "エイジングケアスリーピングマスク",
+          "price": 2264
+        },
+        {
+          "name": "リップスティック",
+          "price": 810
+        }
+      ],
+      "id": "2026-08-31-tr1f"
+    },
+    {
+      "date": "2026-08-31",
+      "store": "薩莉亞 池袋",
+      "payer": "Jenny",
+      "currency": "JPY",
+      "items": [
+        {
+          "name": "原蝦沙拉",
+          "price": 350
+        },
+        {
+          "name": "佛卡夏麵包",
+          "price": 150
+        },
+        {
+          "name": "香烤菠菜",
+          "price": 200
+        },
+        {
+          "name": "烘烤蒜香田螺",
+          "price": 400
+        },
+        {
+          "name": "（雙倍份量）義式烤羊肉串",
+          "price": 800
+        },
+        {
+          "name": "米蘭風肉醬焗烤飯",
+          "price": 300
+        },
+        {
+          "name": "波隆那肉醬義大利麵",
+          "price": 400
+        },
+        {
+          "name": "墨魚汁義大利麵",
+          "price": 500
+        }
+      ],
+      "id": "2026-08-31-j1p2"
+    },
+    {
+      "date": "2026-09-01",
+      "store": "薩莉亞 (サイゼリヤ) 唐吉訶德淺草店",
+      "payer": "Jenny",
+      "currency": "JPY",
+      "items": [
+        {
+          "name": "午餐）鱈魚子醬 西西里風",
+          "price": 500,
+          "sharedBy": []
+        },
+        {
+          "name": "午餐）惡魔漢堡排",
+          "price": 600,
+          "sharedBy": []
+        },
+        {
+          "name": "小蝦沙拉",
+          "price": 350,
+          "sharedBy": []
+        },
+        {
+          "name": "淡菜蒜香燒",
+          "price": 400,
+          "sharedBy": []
+        },
+        {
+          "name": "莫札瑞拉起司卡布里沙拉",
+          "price": 430,
+          "sharedBy": []
+        },
+        {
+          "name": "半熟蛋米蘭風焗飯",
+          "price": 350,
+          "sharedBy": []
+        },
+        {
+          "name": "布丁與經典提拉米蘇",
+          "price": 500,
+          "sharedBy": []
+        },
+        {
+          "name": "巧克力蛋糕＆牛奶義式冰淇淋",
+          "price": 500,
+          "sharedBy": []
+        }
+      ],
+      "id": "2026-09-01-nqsp"
+    },
+    {
+      "date": "2026-09-01",
+      "store": "オーエスドラッグ 浅草店",
+      "payer": "Jenny",
+      "currency": "JPY",
+      "items": [
+        {
+          "name": "パブロンゴールドA微",
+          "price": 1276
+        },
+        {
+          "name": "パブロンゴールドA錠（1,160×2）",
+          "price": 2551
+        },
+        {
+          "name": "キレートレモンクエン酸2（135×2）",
+          "price": 291
+        },
+        {
+          "name": "サンテFXネオ12",
+          "price": 273
+        }
+      ],
+      "id": "2026-09-01-vn8r"
+    },
+    {
+      "date": "2026-09-01",
+      "store": "オーエスドラッグ 浅草店",
+      "payer": "Jenny",
+      "currency": "JPY",
+      "items": [
+        {
+          "name": "アリナミンEXプラス",
+          "price": 4893
+        }
+      ],
+      "id": "2026-09-01-je4q"
+    },
+    {
+      "date": "2026-09-01",
+      "store": "ドン・キホーテ 浅草店",
+      "payer": "Jenny",
+      "currency": "JPY",
+      "items": [
+        {
+          "name": "CT0018-A レギュラー",
+          "price": 3000
+        },
+        {
+          "name": "プロテクトユー55cm グ",
+          "price": 1480
+        },
+        {
+          "name": "プロテクトユー55cm オ",
+          "price": 1480
+        },
+        {
+          "name": "ロイヒつぼ膏156枚（488×2）",
+          "price": 976
+        },
+        {
+          "name": "キットカット濃い抹茶10枚（299×3）",
+          "price": 897
+        },
+        {
+          "name": "WF酒粕Pトライアル（500×2）",
+          "price": 1000
+        },
+        {
+          "name": "マミーUVアクアミルク",
+          "price": 900
+        },
+        {
+          "name": "ケイトリアルシェードスティック（1,500×2）",
+          "price": 3000
+        },
+        {
+          "name": "ティースマスターホワイトクリーンブラシ",
+          "price": 1700
+        },
+        {
+          "name": "ルテインGOLD90粒",
+          "price": 7870
+        },
+        {
+          "name": "EIA エマルジョン",
+          "price": 3800
+        },
+        {
+          "name": "EIS ERクリームT",
+          "price": 7500
+        },
+        {
+          "name": "EIS DCRTUSP+",
+          "price": 3100
+        },
+        {
+          "name": "CR2032P/Panasonic/ボ",
+          "price": 359
+        },
+        {
+          "name": "ぬいぐるみマスコット ピ",
+          "price": 900
+        },
+        {
+          "name": "クーポン割引7%",
+          "price": -2656
+        }
+      ],
+      "id": "2026-09-01-i1tc"
+    },
+    {
+      "date": "2026-09-01",
+      "store": "ライフ 浅草店",
+      "payer": "Jenny",
+      "currency": "JPY",
+      "items": [
+        {
+          "name": "雪印 雪印メグ牛乳750",
+          "price": 265
+        },
+        {
+          "name": "森永 森永トリプルBLA",
+          "price": 150
+        },
+        {
+          "name": "桃（中玉）",
+          "price": 646
+        },
+        {
+          "name": "味わい濃厚な黒ごまとうふ",
+          "price": 150
+        },
+        {
+          "name": "アンガス肩ロース切りおと（シール割引後）",
+          "price": 883
+        },
+        {
+          "name": "駿河湾産釜揚しらす温玉丼",
+          "price": 421
+        },
+        {
+          "name": "小松菜",
+          "price": 138
+        },
+        {
+          "name": "PCキャベツ千切り",
+          "price": 107
+        },
+        {
+          "name": "そのままでもおいしい食パ",
+          "price": 150
+        }
+      ],
+      "id": "2026-09-01-1n3a"
+    },
+    {
+      "date": "2026-09-01",
+      "store": "松本清 浅草一丁目店",
+      "payer": "Jenny",
+      "currency": "JPY",
+      "items": [
+        {
+          "name": "410鼻うがい10包",
+          "price": 980
+        },
+        {
+          "name": "315CEZシームレスPO",
+          "price": 880
+        },
+        {
+          "name": "315CANリップCスク（2点X540）",
+          "price": 1080
+        },
+        {
+          "name": "315CANリップCスクラ",
+          "price": 540
+        },
+        {
+          "name": "315CEZ アイシャドウ",
+          "price": 680
+        },
+        {
+          "name": "315CANむにゅっとHL",
+          "price": 580
+        },
+        {
+          "name": "315CEZ Cブラッシュ",
+          "price": 500
+        },
+        {
+          "name": "315CEZ PGハイライ",
+          "price": 600
+        }
+      ],
+      "id": "2026-09-01-oczs"
+    },
+    {
+      "date": "2026-09-01",
+      "store": "無印良品 新宿ぺぺ",
+      "payer": "Jenny",
+      "currency": "JPY",
+      "items": [
+        {
+          "name": "パイル編みショート丈靴下（細ライ）",
+          "price": 300
+        },
+        {
+          "name": "さらっと綿スニーカーイン",
+          "price": 300
+        },
+        {
+          "name": "4足組ショート丈靴下",
+          "price": 900
+        },
+        {
+          "name": "レーヨン混メロウ靴下",
+          "price": 300
+        },
+        {
+          "name": "口ゴムなし靴下（無地）",
+          "price": 300
+        },
+        {
+          "name": "口ゴムなしショート丈靴下",
+          "price": 300
+        },
+        {
+          "name": "レーヨン混メロウ靴下",
+          "price": 300
+        },
+        {
+          "name": "UVカット乾きやすいワッフル半袖",
+          "price": 2264
+        },
+        {
+          "name": "綿天竺 前閉じボクサーパンツ",
+          "price": 719
+        },
+        {
+          "name": "洗顔用泡立てネット",
+          "price": 90
+        },
+        {
+          "name": "発酵導入化粧液（詰替用）",
+          "price": 1264
+        },
+        {
+          "name": "マイルド洗顔フォーム（大容量）",
+          "price": 628
+        },
+        {
+          "name": "マイルド洗顔フォーム（大容量）",
+          "price": 628
+        }
+      ],
+      "id": "2026-09-01-sun6"
+    },
+    {
+      "date": "2026-09-01",
+      "store": "ライフ 浅草店",
+      "payer": "Jenny",
+      "currency": "JPY",
+      "items": [
+        {
+          "name": "日清 ラ王柚子しお3食パ",
+          "price": 322
+        },
+        {
+          "name": "日清 ラ王醤油3食パック",
+          "price": 321
+        },
+        {
+          "name": "金吾堂 厚焼しょうゆ7枚",
+          "price": 214
+        },
+        {
+          "name": "SL塩こんぶ40g",
+          "price": 204
+        },
+        {
+          "name": "三ツ矢特濃アップルスカッ",
+          "price": 107
+        }
+      ],
+      "id": "2026-09-01-6j3l"
+    },
+    {
+      "date": "2026-09-01",
+      "store": "ライフ 浅草店",
+      "payer": "Jenny",
+      "currency": "JPY",
+      "items": [
+        {
+          "name": "ミニのり鮭弁当（シール割引50%後）",
+          "price": 183
+        }
+      ],
+      "id": "2026-09-01-0f7v"
+    },
+    {
+      "date": "2026-09-01",
+      "store": "鳴門鯛焼本舗 浅草新仲見世店",
+      "payer": "Jenny",
+      "currency": "JPY",
+      "items": [
+        {
+          "name": "鳴門金時いも鯛焼き",
+          "price": 400
+        },
+        {
+          "name": "抹茶ラテ（L）",
+          "price": 600
+        }
+      ],
+      "id": "2026-09-01-ccyz"
+    },
+    {
+      "date": "2026-09-02",
+      "store": "mont-bell 御徒町店",
+      "payer": "Jenny",
+      "currency": "JPY",
+      "items": [
+        {
+          "name": "フィッシングキャップ",
+          "price": 3630,
+          "note": "帽子"
+        },
+        {
+          "name": "ULポーチS",
+          "price": 2200,
+          "note": "多功能小袋子"
+        }
+      ],
+      "id": "2026-09-02-2u61"
     }
   ]
 }
