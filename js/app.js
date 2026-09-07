@@ -180,9 +180,7 @@ function renderList() {
             <div class="item-row">
               <div class="item-main">
                 <div class="item-name" data-note-trigger data-record="${escapeAttr(r.id)}" data-index="${idx}" title="點品名可加中文註解 / 分帳">${escapeHtml(it.name)}</div>
-                ${sum
-                  ? `<div class="split-summary">${escapeHtml(sum)}</div>`
-                  : `<div class="split-summary is-public">未分帳 → 公用支出</div>`}
+                ${sum ? `<div class="split-summary">${escapeHtml(sum)}</div>` : ''}
               </div>
               <div class="item-note" data-note-cell data-record="${escapeAttr(r.id)}" data-index="${idx}">${it.note ? escapeHtml(it.note) : ''}</div>
               <div class="item-price">¥${formatNum(it.price)}</div>
@@ -468,7 +466,8 @@ function openItemEditor(recordId, index) {
   setTimeout(() => document.addEventListener('mousedown', onDocDown, true), 0);
 
   cell.addEventListener('keydown', e => {
-    if (e.key === 'Escape') { e.preventDefault(); close(false); }
+    if (e.key === 'Enter') { e.preventDefault(); close(true); }
+    else if (e.key === 'Escape') { e.preventDefault(); close(false); }
   });
 
   noteInput.focus();
@@ -697,9 +696,7 @@ function handlePreview() {
           <div class="item-row">
             <div class="item-main">
               <div class="item-name">${escapeHtml(it.name)}</div>
-              ${sum
-                ? `<div class="split-summary">${escapeHtml(sum)}</div>`
-                : `<div class="split-summary is-public">未分帳 → 公用支出</div>`}
+              ${sum ? `<div class="split-summary">${escapeHtml(sum)}</div>` : ''}
             </div>
             <div class="item-note">${it.note ? escapeHtml(it.note) : ''}</div>
             <div class="item-price">¥${formatNum(it.price)}</div>
