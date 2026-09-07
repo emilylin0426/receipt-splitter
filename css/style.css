@@ -147,29 +147,49 @@ section.view.active { display: block; }
   justify-content: space-between;
   align-items: baseline;
   margin-bottom: 6px;
+  cursor: pointer;                 /* 這塊點了會收合 / 展開 */
 }
 
 .receipt-card .store {
   font-weight: 700;
   font-size: 15px;
-  cursor: pointer;
-  border-bottom: 1px dotted transparent;
 }
-.receipt-card .store:hover { border-bottom-color: var(--ink-faint); }
+
+/* 店名 / 付款者：點一下變輸入框 */
+.receipt-card .store-name,
+.receipt-card .payer-name {
+  cursor: text;
+  border-bottom: 1px dotted var(--ink-faint);
+}
+.receipt-card .store-name:hover,
+.receipt-card .payer-name:hover { border-bottom-color: var(--ink); }
 
 .receipt-card .date {
   font-family: var(--mono);
   font-size: 12px;
   color: var(--ink-faint);
+  cursor: default;
 }
 
 .receipt-card .payer-line {
   font-size: 12.5px;
   color: var(--ink-soft);
   margin-bottom: 10px;
+  cursor: pointer;
 }
 
 .receipt-card .payer-line b { color: var(--ink); }
+
+.receipt-card .field-input {
+  font: inherit;
+  color: var(--ink);
+  padding: 1px 4px;
+  border: 1px solid var(--stamp);
+  border-radius: 4px;
+  background: #fffdf8;
+  min-width: 6em;
+}
+.receipt-card .field-input:focus { outline: none; }
 
 .receipt-card .items {
   border-top: 1px dashed var(--line);
@@ -531,8 +551,6 @@ button.danger { background: transparent; color: var(--stamp); border: 1px solid 
   font-size: 13px;
   padding: 30px 0;
 }
-
-canvas#spendChart { max-width: 100%; }
 
 footer.note {
   text-align: center;

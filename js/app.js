@@ -1,10 +1,10 @@
 const LOCAL_KEY = 'receiptSplitter.localRecords';
 const EDIT_KEY = 'receiptSplitter.itemEdits';
+const RECORD_EDIT_KEY = 'receiptSplitter.recordEdits';
 const OLD_NOTE_KEY = 'receiptSplitter.itemNotes';
 
 let baseData = { people: [], records: [] };
 let localRecords = [];
-let chartInstance = null;
 
 init();
 
@@ -16,6 +16,7 @@ async function init() {
   loadLocalRecords();
   await loadBaseData();
   backfillIds();
+  applyRecordEdits();
   migrateOldEdits();
   applyEdits();
   populateFilters();
@@ -75,13 +76,12 @@ function bindTabs() {
   });
 }
 
-/* ---------------- render: list + chart ---------------- */
+/* ---------------- render: list ---------------- */
 
 function renderAll() {
   const count = getAllRecords().length;
   document.getElementById('recordCount').textContent = `${count} 筆紀錄`;
   renderList();
-  renderChart();
   renderSettlement();
   renderLocalList();
 }
@@ -168,11 +168,11 @@ function renderList() {
     return `
       <div class="receipt-card" data-id="${escapeAttr(r.id)}">
         <div class="row-top">
-          <span class="store">${escapeHtml(r.store)}${isLocal ? '<span class="local-badge">本機</span>' : ''}</span>
+          <span class="store"><span class="store-name" data-edit="store" title="點一下改店名">${escapeHtml(r.store)}</span>${isLocal ? '<span class="local-badge">本機</span>' : ''}</span>
           <span class="date">${escapeHtml(r.date)}</span>
         </div>
-        <div class="payer-line">由 <b>${escapeHtml(r.payer)}</b> 付款 · 共 ${(r.items || []).length} 項</div>
-        <div class="toggle-hint">點店名展開 / 收合細項 ▾</div>
+        <div class="payer-line">由 <b class="payer-name" data-edit="payer" title="點一下改付款者">${escapeHtml(r.payer)}</b> 付款 · 共 ${(r.items || []).length} 項</div>
+        <div class="toggle-hint">點這區塊展開 / 收合細項 ▾</div>
         <div class="items">
           ${(r.items || []).map((it, idx) => {
             const sum = splitSummary(it);
@@ -192,43 +192,102 @@ function renderList() {
     `;
   }).join('');
 
-  container.querySelectorAll('.receipt-card').forEach(card => {
+  [...container.querySelectorAll('.receipt-card')].forEach((card, i) => {
     if (expanded.has(card.dataset.id)) card.classList.add('expanded');
-    // 只有點店名才展開 / 收合
-    const store = card.querySelector('.store');
-    if (store) store.addEventListener('click', () => card.classList.toggle('expanded'));
+    const rec = records[i];
+
+    card.addEventListener('click', e => {
+      // 店名 / 付款者：點一下變輸入框
+      const editEl = e.target.closest('[data-edit]');
+      if (editEl && card.contains(editEl)) {
+        e.stopPropagation();
+        openFieldEditor(editEl, rec, editEl.dataset.edit);
+        return;
+      }
+      // 只有「虛線以上、日期左邊」那塊才收合 / 展開
+      const inHeader = e.target.closest('.row-top') ||
+        e.target.closest('.payer-line') ||
+        e.target.closest('.toggle-hint');
+      if (!inHeader || e.target.closest('.date')) return;
+      card.classList.toggle('expanded');
+    });
   });
 }
 
-function renderChart() {
-  const people = getAllPeople();
-  const totals = {};
-  people.forEach(p => { totals[p] = 0; });
+/* ---------------- record-level edits: 店名 / 付款者 ---------------- */
 
-  getAllRecords().forEach(r => (r.items || []).forEach(it => {
-    Object.entries(itemShares(it)).forEach(([who, amt]) => {
-      if (who === PUBLIC_PAYER) return;
-      totals[who] = (totals[who] || 0) + amt;
-    });
-  }));
+/*
+ * 跟品項的備註 / 分帳一樣：改動直接寫回 record.store / record.payer（匯出時帶出去），
+ * 同時在 localStorage（RECORD_EDIT_KEY）疊一份，重新整理也不會掉。
+ * 結構：{ [recordId]: { store?: string, payer?: string } }
+ */
 
-  const ctx = document.getElementById('spendChart');
-  if (chartInstance) chartInstance.destroy();
-  chartInstance = new Chart(ctx, {
-    type: 'bar',
-    data: {
-      labels: people,
-      datasets: [{
-        label: '每人分攤總額',
-        data: people.map(p => Math.round(totals[p] || 0)),
-        backgroundColor: '#b4392b'
-      }]
-    },
-    options: {
-      responsive: true,
-      plugins: { legend: { display: false } },
-      scales: { y: { beginAtZero: true } }
-    }
+function loadRecordEdits() {
+  try {
+    return JSON.parse(localStorage.getItem(RECORD_EDIT_KEY) || '{}');
+  } catch (e) {
+    return {};
+  }
+}
+
+function saveRecordEdits(overlay) {
+  localStorage.setItem(RECORD_EDIT_KEY, JSON.stringify(overlay));
+}
+
+function applyRecordEdits() {
+  const overlay = loadRecordEdits();
+  getAllRecords().forEach(r => {
+    const e = overlay[r.id];
+    if (!e) return;
+    if (e.store) r.store = e.store;
+    if (e.payer) r.payer = e.payer;
+  });
+}
+
+function setRecordField(record, field, value) {
+  record[field] = value;
+
+  const overlay = loadRecordEdits();
+  const bucket = overlay[record.id] || (overlay[record.id] = {});
+  bucket[field] = value;
+  saveRecordEdits(overlay);
+
+  if (localRecords.some(lr => lr.id === record.id)) saveLocalRecords();
+
+  populateFilters();
+  renderList();
+  renderSettlement();
+}
+
+function openFieldEditor(el, record, field) {
+  if (el.querySelector('input')) return;
+  const original = record[field] || '';
+
+  const input = document.createElement('input');
+  input.type = 'text';
+  input.className = 'field-input';
+  input.value = original;
+
+  el.textContent = '';
+  el.appendChild(input);
+  input.focus();
+  input.select();
+
+  let done = false;
+  const close = save => {
+    if (done) return;
+    done = true;
+    const val = input.value.trim();
+    if (save && val && val !== original) setRecordField(record, field, val);
+    else el.textContent = original;
+  };
+
+  input.addEventListener('mousedown', e => e.stopPropagation());
+  input.addEventListener('click', e => e.stopPropagation());
+  input.addEventListener('blur', () => close(true));
+  input.addEventListener('keydown', e => {
+    if (e.key === 'Enter') { e.preventDefault(); close(true); }
+    else if (e.key === 'Escape') { e.preventDefault(); close(false); }
   });
 }
 
@@ -533,7 +592,6 @@ function commitItemEditor(record, index, { note, rows, total }) {
   if (localRecords.some(lr => lr.id === record.id)) saveLocalRecords();
 
   renderList();
-  renderChart();
   renderSettlement();
   populateFilters();
 }
