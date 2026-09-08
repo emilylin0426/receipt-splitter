@@ -232,18 +232,46 @@
           ]
         },
         {
-          "name": "DHC コラーゲン 60日分（999円×4個）",
-          "price": 3996,
-          "sharedBy": [],
+          "name": "DHC コラーゲン 60日分",
+          "price": 999,
+          "note": "膠原蛋白",
+          "split": [
+            {
+              "who": "Jenny",
+              "units": 1
+            }
+          ]
+        },
+        {
+          "name": "DHC コラーゲン 60日分",
+          "price": 999,
+          "note": "膠原蛋白",
+          "split": [
+            {
+              "who": "Jenny",
+              "units": 1
+            }
+          ]
+        },
+        {
+          "name": "DHC コラーゲン 60日分",
+          "price": 999,
           "note": "膠原蛋白",
           "split": [
             {
               "who": "Emily",
-              "units": 2
-            },
+              "units": 1
+            }
+          ]
+        },
+        {
+          "name": "DHC コラーゲン 60日分",
+          "price": 999,
+          "note": "膠原蛋白",
+          "split": [
             {
-              "who": "Jenny",
-              "units": 2
+              "who": "Emily",
+              "units": 1
             }
           ]
         },
