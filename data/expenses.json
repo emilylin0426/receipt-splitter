@@ -279,7 +279,7 @@
           "name": "DHC 持続型ビタミンC（547円×2個）",
           "price": 1094,
           "sharedBy": [],
-          "note": "維他命C"
+          "note": "維他命Ｃ"
         },
         {
           "name": "龍角散 のどすっきり飴",
@@ -605,6 +605,139 @@
         }
       ],
       "id": "2026-08-27-gh5w"
+    },
+    {
+      "date": "2026-08-27",
+      "store": "無印良品 新宿ぺぺ",
+      "payer": "Jenny",
+      "currency": "JPY",
+      "items": [
+        {
+          "name": "パイル編みショート丈靴下（細ライ）",
+          "price": 300,
+          "note": "Jenny線條襪",
+          "split": [
+            {
+              "who": "Jenny",
+              "units": 1
+            }
+          ]
+        },
+        {
+          "name": "さらっと綿スニーカーイン",
+          "price": 300,
+          "note": "Jenny短襪",
+          "split": [
+            {
+              "who": "Jenny",
+              "units": 1
+            }
+          ]
+        },
+        {
+          "name": "4足組ショート丈靴下",
+          "price": 900,
+          "note": "Ox襪1組4雙",
+          "split": [
+            {
+              "who": "Ox",
+              "units": 1
+            }
+          ]
+        },
+        {
+          "name": "レーヨン混メロウ靴下",
+          "price": 300,
+          "note": "Emily直角襪",
+          "split": [
+            {
+              "who": "Emily",
+              "units": 1
+            }
+          ]
+        },
+        {
+          "name": "口ゴムなし靴下（無地）",
+          "price": 300,
+          "note": "Emily直角襪",
+          "split": [
+            {
+              "who": "Emily",
+              "units": 1
+            }
+          ]
+        },
+        {
+          "name": "口ゴムなしショート丈靴下",
+          "price": 300,
+          "note": "Emily直角襪",
+          "split": [
+            {
+              "who": "Emily",
+              "units": 1
+            }
+          ]
+        },
+        {
+          "name": "レーヨン混メロウ靴下",
+          "price": 300,
+          "note": "Emily直角襪",
+          "split": [
+            {
+              "who": "Emily",
+              "units": 1
+            }
+          ]
+        },
+        {
+          "name": "UVカット乾きやすいワッフル半袖",
+          "price": 2264,
+          "note": "Ox衣服",
+          "split": [
+            {
+              "who": "Ox",
+              "units": 1
+            }
+          ]
+        },
+        {
+          "name": "綿天竺 前閉じボクサーパンツ",
+          "price": 719,
+          "note": "Ox內褲",
+          "split": [
+            {
+              "who": "Ox",
+              "units": 1
+            }
+          ]
+        },
+        {
+          "name": "洗顔用泡立てネット",
+          "price": 90,
+          "note": "起泡網"
+        },
+        {
+          "name": "発酵導入化粧液（詰替用）",
+          "price": 1264,
+          "split": [
+            {
+              "who": "Jenny",
+              "units": 1
+            }
+          ]
+        },
+        {
+          "name": "マイルド洗顔フォーム（大容量）",
+          "price": 628,
+          "note": "洗面乳"
+        },
+        {
+          "name": "マイルド洗顔フォーム（大容量）",
+          "price": 628,
+          "note": "洗面乳"
+        }
+      ],
+      "id": "2026-09-01-sun6"
     },
     {
       "date": "2026-08-28",
@@ -1898,139 +2031,6 @@
         }
       ],
       "id": "2026-09-01-oczs"
-    },
-    {
-      "date": "2026-08-27",
-      "store": "無印良品 新宿ぺぺ",
-      "payer": "Jenny",
-      "currency": "JPY",
-      "items": [
-        {
-          "name": "パイル編みショート丈靴下（細ライ）",
-          "price": 300,
-          "note": "Jenny線條襪",
-          "split": [
-            {
-              "who": "Jenny",
-              "units": 1
-            }
-          ]
-        },
-        {
-          "name": "さらっと綿スニーカーイン",
-          "price": 300,
-          "note": "Jenny短襪",
-          "split": [
-            {
-              "who": "Jenny",
-              "units": 1
-            }
-          ]
-        },
-        {
-          "name": "4足組ショート丈靴下",
-          "price": 900,
-          "note": "Ox襪1組4雙",
-          "split": [
-            {
-              "who": "Ox",
-              "units": 1
-            }
-          ]
-        },
-        {
-          "name": "レーヨン混メロウ靴下",
-          "price": 300,
-          "note": "Emily直角襪",
-          "split": [
-            {
-              "who": "Emily",
-              "units": 1
-            }
-          ]
-        },
-        {
-          "name": "口ゴムなし靴下（無地）",
-          "price": 300,
-          "note": "Emily直角襪",
-          "split": [
-            {
-              "who": "Emily",
-              "units": 1
-            }
-          ]
-        },
-        {
-          "name": "口ゴムなしショート丈靴下",
-          "price": 300,
-          "note": "Emily直角襪",
-          "split": [
-            {
-              "who": "Emily",
-              "units": 1
-            }
-          ]
-        },
-        {
-          "name": "レーヨン混メロウ靴下",
-          "price": 300,
-          "note": "Emily直角襪",
-          "split": [
-            {
-              "who": "Emily",
-              "units": 1
-            }
-          ]
-        },
-        {
-          "name": "UVカット乾きやすいワッフル半袖",
-          "price": 2264,
-          "note": "Ox衣服",
-          "split": [
-            {
-              "who": "Ox",
-              "units": 1
-            }
-          ]
-        },
-        {
-          "name": "綿天竺 前閉じボクサーパンツ",
-          "price": 719,
-          "note": "Ox內褲",
-          "split": [
-            {
-              "who": "Ox",
-              "units": 1
-            }
-          ]
-        },
-        {
-          "name": "洗顔用泡立てネット",
-          "price": 90,
-          "note": "起泡網"
-        },
-        {
-          "name": "発酵導入化粧液（詰替用）",
-          "price": 1264,
-          "split": [
-            {
-              "who": "Jenny",
-              "units": 1
-            }
-          ]
-        },
-        {
-          "name": "マイルド洗顔フォーム（大容量）",
-          "price": 628,
-          "note": "洗面乳"
-        },
-        {
-          "name": "マイルド洗顔フォーム（大容量）",
-          "price": 628,
-          "note": "洗面乳"
-        }
-      ],
-      "id": "2026-09-01-sun6"
     },
     {
       "date": "2026-09-01",
