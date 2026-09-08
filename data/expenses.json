@@ -3,14 +3,45 @@
     "Emily",
     "Jenny",
     "Ox",
-    "Unknown",
     "現金"
   ],
   "records": [
     {
+      "date": "2026-07-09",
+      "store": "Airbnb",
+      "payer": "Jenny",
+      "currency": "JPY",
+      "items": [
+        {
+          "name": "住宿 *台幣21532*",
+          "price": 104829
+        }
+      ],
+      "id": "2026-07-09-e6e3"
+    },
+    {
+      "date": "2026-08-16",
+      "store": "Shibuya Sky 澀谷",
+      "payer": "Emily",
+      "currency": "JPY",
+      "items": [
+        {
+          "name": "入場票",
+          "price": 10200,
+          "split": [
+            {
+              "who": "公用支出",
+              "units": 1
+            }
+          ]
+        }
+      ],
+      "id": "2026-08-16-7a36"
+    },
+    {
       "date": "2026-08-26",
       "store": "FamilyMart 台東松が谷店",
-      "payer": "Emily",
+      "payer": "現金",
       "currency": "JPY",
       "items": [
         {
@@ -43,7 +74,7 @@
     {
       "date": "2026-08-26",
       "store": "Life超市 浅草店",
-      "payer": "Jenny",
+      "payer": "現金",
       "currency": "JPY",
       "items": [
         {
@@ -128,8 +159,21 @@
       "id": "2026-08-26-bsj9"
     },
     {
+      "date": "2026-08-26",
+      "store": "Klook",
+      "payer": "Ox",
+      "currency": "JPY",
+      "items": [
+        {
+          "name": "Skyliner *台幣1311*",
+          "price": 6555
+        }
+      ],
+      "id": "2026-08-26-d0a7"
+    },
+    {
       "date": "2026-08-27",
-      "store": "OS藥妝 淺草店（オーエスドラッグ 浅草店）",
+      "store": "OS藥妝 オーエスドラッグ 浅草店",
       "payer": "Jenny",
       "currency": "JPY",
       "items": [
@@ -182,7 +226,7 @@
           "note": "維他命B",
           "split": [
             {
-              "who": "Unknown",
+              "who": "Jenny",
               "units": 1
             }
           ]
@@ -250,7 +294,7 @@
     {
       "date": "2026-08-27",
       "store": "711 台東松が谷1丁目店",
-      "payer": "Jenny",
+      "payer": "現金",
       "currency": "JPY",
       "items": [
         {
@@ -265,7 +309,7 @@
     {
       "date": "2026-08-27",
       "store": "Life超市 浅草店",
-      "payer": "Jenny",
+      "payer": "現金",
       "currency": "JPY",
       "items": [
         {
@@ -298,7 +342,7 @@
     {
       "date": "2026-08-27",
       "store": "Life超市 浅草店",
-      "payer": "Jenny",
+      "payer": "現金",
       "currency": "JPY",
       "items": [
         {
@@ -406,12 +450,24 @@
         {
           "name": "外 Opal 単色（1点目）",
           "price": 1870,
-          "sharedBy": []
+          "sharedBy": [],
+          "split": [
+            {
+              "who": "Emily",
+              "units": 1
+            }
+          ]
         },
         {
           "name": "外 Opal 単色（2点目）",
           "price": 1870,
-          "sharedBy": []
+          "sharedBy": [],
+          "split": [
+            {
+              "who": "Emily",
+              "units": 1
+            }
+          ]
         }
       ],
       "id": "2026-08-27-gpkw"
@@ -448,7 +504,7 @@
     {
       "date": "2026-08-27",
       "store": "麥當勞 マクドナルド 稲荷町駅前店",
-      "payer": "Jenny",
+      "payer": "現金",
       "currency": "JPY",
       "items": [
         {
@@ -525,7 +581,7 @@
     {
       "date": "2026-08-28",
       "store": "maruetsu 東上野店",
-      "payer": "Jenny",
+      "payer": "現金",
       "currency": "JPY",
       "items": [
         {
@@ -558,7 +614,7 @@
     {
       "date": "2026-08-28",
       "store": "沾麵和牛 あいだや（上野）",
-      "payer": "Jenny",
+      "payer": "現金",
       "currency": "JPY",
       "items": [
         {
@@ -567,6 +623,19 @@
         }
       ],
       "id": "2026-08-28-5561"
+    },
+    {
+      "date": "2026-08-28",
+      "store": "Klook",
+      "payer": "Jenny",
+      "currency": "JPY",
+      "items": [
+        {
+          "name": "高尾山套票 *台幣1440*",
+          "price": 7200
+        }
+      ],
+      "id": "2026-08-28-z39j"
     },
     {
       "date": "2026-08-29",
@@ -591,7 +660,7 @@
     {
       "date": "2026-08-29",
       "store": "全家FamilyMart 台東四丁目店",
-      "payer": "Ox",
+      "payer": "現金",
       "currency": "JPY",
       "items": [
         {
@@ -618,7 +687,7 @@
     {
       "date": "2026-08-29",
       "store": "711 新御徒町駅西店",
-      "payer": "Jenny",
+      "payer": "現金",
       "currency": "JPY",
       "items": [
         {
@@ -651,7 +720,7 @@
     {
       "date": "2026-08-29",
       "store": "壽司郎スシロー 上野店",
-      "payer": "Jenny",
+      "payer": "現金",
       "currency": "JPY",
       "items": [
         {
@@ -692,7 +761,7 @@
     {
       "date": "2026-08-29",
       "store": "Life超市 浅草店",
-      "payer": "Jenny",
+      "payer": "現金",
       "currency": "JPY",
       "items": [
         {
@@ -713,7 +782,7 @@
     {
       "date": "2026-08-29",
       "store": "Life超市 浅草店",
-      "payer": "Jenny",
+      "payer": "現金",
       "currency": "JPY",
       "items": [
         {
@@ -765,7 +834,7 @@
     {
       "date": "2026-08-29",
       "store": "Life超市 浅草店",
-      "payer": "Jenny",
+      "payer": "現金",
       "currency": "JPY",
       "items": [
         {
@@ -779,7 +848,7 @@
     {
       "date": "2026-08-29",
       "store": "Uniqlo ユニクロ 御徒町店",
-      "payer": "Unknown",
+      "payer": "Ox",
       "currency": "JPY",
       "items": [
         {
@@ -810,7 +879,7 @@
     {
       "date": "2026-08-29",
       "store": "Uniqlo ユニクロ 御徒町店",
-      "payer": "Unknown",
+      "payer": "Jenny",
       "currency": "JPY",
       "items": [
         {
@@ -947,7 +1016,7 @@
     {
       "date": "2026-08-29",
       "store": "OS藥妝 オーエスドラッグ 上野店",
-      "payer": "Jenny",
+      "payer": "現金",
       "currency": "JPY",
       "items": [
         {
@@ -1080,7 +1149,7 @@
     {
       "date": "2026-08-30",
       "store": "LAWSON 東京タワー店",
-      "payer": "Jenny",
+      "payer": "現金",
       "currency": "JPY",
       "items": [
         {
@@ -1099,19 +1168,43 @@
       "items": [
         {
           "name": "ラーメン／Ramen",
-          "price": 1180
+          "price": 1180,
+          "split": [
+            {
+              "who": "公用支出",
+              "units": 1
+            }
+          ]
         },
         {
           "name": "ラーメン／Ramen",
-          "price": 1180
+          "price": 1180,
+          "split": [
+            {
+              "who": "公用支出",
+              "units": 1
+            }
+          ]
         },
         {
           "name": "ラーメン／Ramen",
-          "price": 1180
+          "price": 1180,
+          "split": [
+            {
+              "who": "公用支出",
+              "units": 1
+            }
+          ]
         },
         {
           "name": "替玉／Kae-Dama",
-          "price": 210
+          "price": 210,
+          "split": [
+            {
+              "who": "公用支出",
+              "units": 1
+            }
+          ]
         }
       ],
       "id": "2026-08-30-bwhy"
@@ -1119,7 +1212,7 @@
     {
       "date": "2026-08-30",
       "store": "3COINS 原宿本店",
-      "payer": "Jenny",
+      "payer": "現金",
       "currency": "JPY",
       "items": [
         {
@@ -1144,7 +1237,7 @@
     {
       "date": "2026-08-30",
       "store": "大阪燒/文字燒 もんじゃ焼き 渋谷マスダ亭",
-      "payer": "Jenny",
+      "payer": "現金",
       "currency": "JPY",
       "items": [
         {
@@ -1197,7 +1290,7 @@
     {
       "date": "2026-08-31",
       "store": "八十八鎌倉",
-      "payer": "Emily",
+      "payer": "現金",
       "currency": "JPY",
       "items": [
         {
@@ -1356,6 +1449,19 @@
         }
       ],
       "id": "2026-08-31-j1p2"
+    },
+    {
+      "date": "2026-08-31",
+      "store": "KKday鎌倉嘟嘟車",
+      "payer": "Jenny",
+      "currency": "JPY",
+      "items": [
+        {
+          "name": "嘟嘟車 *台幣2372+超時費597*",
+          "price": 14845
+        }
+      ],
+      "id": "2026-08-31-2p09"
     },
     {
       "date": "2026-09-01",
@@ -1626,7 +1732,7 @@
     {
       "date": "2026-09-01",
       "store": "Life超市 浅草店",
-      "payer": "Jenny",
+      "payer": "現金",
       "currency": "JPY",
       "items": [
         {
@@ -1671,13 +1777,19 @@
     {
       "date": "2026-09-01",
       "store": "松本清 浅草一丁目店",
-      "payer": "Jenny",
+      "payer": "Emily",
       "currency": "JPY",
       "items": [
         {
           "name": "410鼻うがい10包",
           "price": 980,
-          "note": "洗鼻鹽"
+          "note": "洗鼻鹽",
+          "split": [
+            {
+              "who": "Jenny",
+              "units": 1
+            }
+          ]
         },
         {
           "name": "315CEZシームレスPO",
@@ -1760,7 +1872,7 @@
       "id": "2026-09-01-oczs"
     },
     {
-      "date": "2026-09-01",
+      "date": "2026-08-27",
       "store": "無印良品 新宿ぺぺ",
       "payer": "Jenny",
       "currency": "JPY",
@@ -1895,7 +2007,7 @@
     {
       "date": "2026-09-01",
       "store": "Life超市 浅草店",
-      "payer": "Jenny",
+      "payer": "現金",
       "currency": "JPY",
       "items": [
         {
@@ -1929,7 +2041,7 @@
     {
       "date": "2026-09-01",
       "store": "Life超市 浅草店",
-      "payer": "Jenny",
+      "payer": "現金",
       "currency": "JPY",
       "items": [
         {
@@ -1992,14 +2104,14 @@
     },
     {
       "date": "2026-09-02",
-      "store": "オーエスドラッグ 上野店",
+      "store": "OS藥妝 オーエスドラッグ 上野店",
       "payer": "Jenny",
       "currency": "JPY",
       "items": [
         {
           "name": "キューピーコーワゴール",
           "price": 1655,
-          "note": "綜合B群",
+          "note": "綜合B群(楊絜雯)",
           "split": [
             {
               "who": "Emily",
@@ -2009,6 +2121,129 @@
         }
       ],
       "id": "2026-09-02-jepc"
+    },
+    {
+      "date": "2026-09-02",
+      "store": "川豐鰻魚飯",
+      "payer": "現金",
+      "currency": "JPY",
+      "items": [
+        {
+          "name": "2/3鰻魚飯",
+          "price": 9600
+        },
+        {
+          "name": "鰻魚肝湯",
+          "price": 200
+        }
+      ],
+      "id": "2026-09-02-db02"
+    },
+    {
+      "date": "2026-09-02",
+      "store": "成田山羊羹",
+      "payer": "現金",
+      "currency": "JPY",
+      "items": [
+        {
+          "name": "抹茶羊羹",
+          "price": 540
+        },
+        {
+          "name": "栗子羊羹",
+          "price": 250
+        },
+        {
+          "name": "梨子果凍",
+          "price": 250
+        }
+      ],
+      "id": "2026-09-02-efc5"
+    },
+    {
+      "date": "2026-09-02",
+      "store": "サンドラッグ",
+      "payer": "現金",
+      "currency": "JPY",
+      "items": [
+        {
+          "name": "巨峰葡萄軟糖",
+          "price": 91
+        },
+        {
+          "name": "麝香葡萄軟糖",
+          "price": 91
+        },
+        {
+          "name": "水蜜桃軟糖x2",
+          "price": 182
+        },
+        {
+          "name": "鳳梨軟糖x2",
+          "price": 182
+        }
+      ],
+      "id": "2026-09-02-lptz"
+    },
+    {
+      "date": "2026-09-02",
+      "store": "林田仙貝",
+      "payer": "現金",
+      "currency": "JPY",
+      "items": [
+        {
+          "name": "甜醬油仙貝",
+          "price": 150
+        },
+        {
+          "name": "鹹醬油仙貝",
+          "price": 200
+        }
+      ],
+      "id": "2026-09-02-0si2"
+    },
+    {
+      "date": "2026-09-02",
+      "store": "Yamanoakari",
+      "payer": "現金",
+      "currency": "JPY",
+      "items": [
+        {
+          "name": "卡士達甜點",
+          "price": 980
+        }
+      ],
+      "id": "2026-09-02-tf6u"
+    },
+    {
+      "date": "2026-09-02",
+      "store": "機場免稅店",
+      "payer": "現金",
+      "currency": "JPY",
+      "items": [
+        {
+          "name": "NY起司餅乾",
+          "price": 1200
+        },
+        {
+          "name": "古早味起司蛋糕",
+          "price": 1170
+        }
+      ],
+      "id": "2026-09-02-cwwz"
+    },
+    {
+      "date": "2026-09-02",
+      "store": "Klook",
+      "payer": "Jenny",
+      "currency": "JPY",
+      "items": [
+        {
+          "name": "Skyliner *台幣1367*",
+          "price": 6835
+        }
+      ],
+      "id": "2026-09-02-llko"
     }
   ]
 }
