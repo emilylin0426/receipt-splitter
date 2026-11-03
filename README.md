@@ -11,12 +11,30 @@ receipt-splitter/
 ├── css/style.css        樣式
 ├── js/split.js           分帳計算邏輯（純函式，可獨立測試）
 ├── js/app.js             主程式：讀資料、篩選、圖表、新增流程
-└── data/expenses.json    資料檔（範例資料，之後由你手動更新）
+└── data/
+    ├── trips.json        旅程清單（舊 → 新）
+    └── trips/<id>.json   每趟旅程各自的資料檔
 ```
+
+## 多趟旅程
+
+每趟旅程有自己的資料檔，網址用 `?trip=<id>` 切換，例如
+`https://<你的帳號>.github.io/receipt-splitter/?trip=2026-japan`。
+沒帶參數時會開 `trips.json` 最後一趟（最新的）。右上角的下拉選單也可以切換。
+
+開新旅程：
+
+1. 在 `data/trips.json` 的清單**最後面**加一筆 `{ "id": "2027-korea", "name": "2027 韓國" }`
+   （id 只用英數和 `-`，會出現在網址和檔名裡）
+2. 新增 `data/trips/2027-korea.json`，內容先放
+   `{ "people": ["Emily", "Jenny"], "records": [] }`
+3. commit + push
+
+本機暫存（localStorage）也依旅程分開存，不同旅程的未匯出資料不會混在一起。
 
 ## 本機測試
 
-因為有用 `fetch()` 讀取 `data/expenses.json`，用瀏覽器直接打開 `index.html`
+因為有用 `fetch()` 讀取 `data/` 底下的資料檔，用瀏覽器直接打開 `index.html`
 在部分瀏覽器會因為 CORS 擋掉本機檔案讀取，建議用簡單的本機伺服器跑：
 
 ```bash
@@ -44,8 +62,8 @@ python3 -m http.server 8000
 5. **分帳 / 註解**：在「查詢」頁展開收據，點品項的品名，跳出的小框可以打中文註解、
    按「分帳」選誰分幾個（含「公用支出」）。**沒按分帳的品項整筆算公用支出**，
    所以只要把「有人要單獨算」的品項分一分就好
-6. **正式寫入**：確認一批資料都沒問題後，按「匯出完整資料檔」下載新的
-   `expenses.json`，用它取代 repo 裡的 `data/expenses.json`，
+6. **正式寫入**：確認一批資料都沒問題後，按「匯出完整資料檔」下載
+   `<旅程id>.json`，用它取代 repo 裡的 `data/trips/<旅程id>.json`，
    `git add / git commit / git push`，這樣其他人打開網站才會看到
 
 > 本機暫存（localStorage）只存在你自己的瀏覽器裡，換裝置或清瀏覽器資料就會不見，
@@ -133,7 +151,7 @@ python3 -m http.server 8000
 
 ## 之後可以擴充的方向
 
-- 把「匯出並取代 data/expenses.json」這一步改成透過 GitHub Actions
+- 把「匯出並取代資料檔」這一步改成透過 GitHub Actions
   或 GitHub API 自動 commit（需要額外設定 token，注意不要外洩在前端）
 - 加上「編輯 / 刪除已存在紀錄」的功能
 - 加上依店家分類、依月份統計的圖表

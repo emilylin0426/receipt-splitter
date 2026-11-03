@@ -11,7 +11,10 @@
 
   <header class="masthead">
     <h1>收據記帳 / 分帳</h1>
-    <span class="subtitle" id="recordCount">載入中...</span>
+    <div class="masthead-right">
+      <select id="tripSelect" aria-label="選擇旅程"></select>
+      <span class="subtitle" id="recordCount">載入中...</span>
+    </div>
   </header>
 
   <nav class="tabs">
@@ -39,8 +42,8 @@
       <p class="hint">
         把收據照片拍清楚後貼給 Claude，附上固定格式要求（見 README 的 prompt 範本），
         再把它輸出的 JSON 片段貼在下面。這裡的預覽 / 新增只會存在你的瀏覽器（localStorage），
-        確認沒問題後，記得按「匯出完整資料檔」下載新的 <code>expenses.json</code>，
-        取代 <code>data/expenses.json</code> 並 git push，其他人才會看到這筆紀錄。
+        確認沒問題後，記得按「匯出完整資料檔」下載新的資料檔，
+        取代 <code class="trip-data-path">data/trips/…</code> 並 git push，其他人才會看到這筆紀錄。
       </p>
       <textarea id="jsonInput" placeholder='{
   "date": "2026-08-29",
@@ -66,7 +69,7 @@
     <div class="panel">
       <h2>本機暫存紀錄</h2>
       <p class="hint">
-        以下是尚未寫回 <code>data/expenses.json</code> 的紀錄，只存在這個瀏覽器裡。
+        以下是尚未寫回 <code class="trip-data-path">data/trips/…</code> 的紀錄，只存在這個瀏覽器裡。
       </p>
       <div id="localList"></div>
       <div class="btn-row">
@@ -97,7 +100,7 @@
     </div>
   </section>
 
-  <footer class="note">data/expenses.json + localStorage · 純靜態，無後端</footer>
+  <footer class="note">data/trips/*.json + localStorage · 純靜態，無後端</footer>
 </div>
 
 <script src="js/split.js"></script>

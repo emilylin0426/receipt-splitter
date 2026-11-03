@@ -1,8 +1,9 @@
-const LOCAL_KEY = 'receiptSplitter.localRecords';
-const EDIT_KEY = 'receiptSplitter.itemEdits';
-const RECORD_EDIT_KEY = 'receiptSplitter.recordEdits';
-const OLD_NOTE_KEY = 'receiptSplitter.itemNotes';
+// localStorage key 依旅程分開（同一個 github.io 網域下所有 repo 共用 localStorage），
+// 確定是哪一趟之後才由 setStorageKeys() 填入。
+let LOCAL_KEY, EDIT_KEY, RECORD_EDIT_KEY, OLD_NOTE_KEY;
 
+let trips = [];
+let currentTrip = null;
 let baseData = { people: [], records: [] };
 let localRecords = [];
 
@@ -13,6 +14,10 @@ async function init() {
   bindAddView();
   bindFilters();
   bindItemEditing();
+  await loadTrips();
+  setStorageKeys(currentTrip.id);
+  migrateLegacyStorage();
+  renderTripPicker();
   loadLocalRecords();
   await loadBaseData();
   backfillIds();
@@ -30,12 +35,72 @@ function backfillIds() {
   });
 }
 
+/* ---------------- trips ---------------- */
+
+/*
+ * data/trips.json 列出所有旅程（舊 → 新），每趟的資料在 data/trips/<id>.json。
+ * 網址用 ?trip=<id> 指定；沒指定就開清單最後一趟（最新的）。
+ */
+async function loadTrips() {
+  try {
+    const res = await fetch('data/trips.json', { cache: 'no-store' });
+    trips = (await res.json()).trips || [];
+  } catch (e) {
+    console.error('讀取 data/trips.json 失敗', e);
+    trips = [];
+  }
+  if (!trips.length) trips = [{ id: 'default', name: '未命名旅程' }];
+  const wanted = new URLSearchParams(location.search).get('trip');
+  currentTrip = trips.find(t => t.id === wanted) || trips[trips.length - 1];
+  document.title = `${currentTrip.name} · 旅費記帳分帳`;
+}
+
+function tripDataPath() {
+  return `data/trips/${currentTrip.id}.json`;
+}
+
+function setStorageKeys(tripId) {
+  const prefix = `receiptSplitter.${tripId}.`;
+  LOCAL_KEY = prefix + 'localRecords';
+  EDIT_KEY = prefix + 'itemEdits';
+  RECORD_EDIT_KEY = prefix + 'recordEdits';
+  OLD_NOTE_KEY = prefix + 'itemNotes';
+}
+
+// 還沒分旅程前的 key 沒有旅程前綴，那些資料一定屬於最早那趟，搬過去一次就好。
+function migrateLegacyStorage() {
+  if (currentTrip.id !== trips[0].id) return;
+  const legacy = {
+    'receiptSplitter.localRecords': LOCAL_KEY,
+    'receiptSplitter.itemEdits': EDIT_KEY,
+    'receiptSplitter.recordEdits': RECORD_EDIT_KEY,
+    'receiptSplitter.itemNotes': OLD_NOTE_KEY
+  };
+  Object.entries(legacy).forEach(([oldKey, newKey]) => {
+    const val = localStorage.getItem(oldKey);
+    if (val === null) return;
+    if (localStorage.getItem(newKey) === null) localStorage.setItem(newKey, val);
+    localStorage.removeItem(oldKey);
+  });
+}
+
+function renderTripPicker() {
+  const sel = document.getElementById('tripSelect');
+  sel.innerHTML = trips.map(t =>
+    `<option value="${escapeAttr(t.id)}">${escapeHtml(t.name)}</option>`).join('');
+  sel.value = currentTrip.id;
+  sel.addEventListener('change', () => {
+    location.search = '?trip=' + encodeURIComponent(sel.value);
+  });
+  document.querySelectorAll('.trip-data-path').forEach(el => { el.textContent = tripDataPath(); });
+}
+
 async function loadBaseData() {
   try {
-    const res = await fetch('data/expenses.json', { cache: 'no-store' });
+    const res = await fetch(tripDataPath(), { cache: 'no-store' });
     baseData = await res.json();
   } catch (e) {
-    console.error('讀取 data/expenses.json 失敗', e);
+    console.error(`讀取 ${tripDataPath()} 失敗`, e);
     baseData = { people: [], records: [] };
   }
 }
@@ -298,7 +363,7 @@ function openFieldEditor(el, record, field) {
  *  1. 直接掛在 record.items[i] 上（it.note / it.split），「匯出完整資料檔」會一起帶出去，
  *     push 之後大家都看得到。
  *  2. 另外在 localStorage（EDIT_KEY）疊一份 overlay，讓還沒匯出就重新整理頁面時不會消失。
- * 讀完 data/expenses.json 後，用 overlay 蓋一次，之後才 render。
+ * 讀完旅程資料檔後，用 overlay 蓋一次，之後才 render。
  *
  * overlay 結構：{ [recordId]: { [itemIndex]: { note?: string, split?: [{who,units}] } } }
  */
@@ -832,7 +897,7 @@ function handleExport() {
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;
-  a.download = 'expenses.json';
+  a.download = `${currentTrip.id}.json`;
   a.click();
   URL.revokeObjectURL(url);
 }

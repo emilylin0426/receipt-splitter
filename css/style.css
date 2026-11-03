@@ -559,3 +559,9 @@ footer.note {
   margin-top: 40px;
   font-family: var(--mono);
 }
+
+header.masthead .masthead-right {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+}
